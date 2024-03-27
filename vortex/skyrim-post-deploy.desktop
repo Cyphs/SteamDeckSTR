@@ -1,7 +1,7 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Name=Skyrim SE/AE Post-Deploy
-Exec=/home/deck/.Cyphs/steam-deck-master/vortex/skyrim-post-deploy.sh
+Exec=/home/deck/.Cyphs/SteamDeckSTR-master/vortex/skyrim-post-deploy.sh
 Icon=steam_icon_489830
 Terminal=true
 Type=Application

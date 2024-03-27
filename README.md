@@ -15,13 +15,13 @@ Supports only the **latest Steam version of Skyrim Special Edition** (1.6.1170) 
 * Before continuing, back up your Skyrim saves, make sure you've read through the official STR [Wiki](https://wiki.tiltedphoques.com/tilted-online/general-information/faq) and the [Playguide](https://wiki.tiltedphoques.com/tilted-online/general-information/playguide).
 * After installing Skyrim Special Edition on Steam, [Delete all Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) from the Data folder, as well as the 2 _ResourcePack files. If you own the Anniversary Upgrade DLC, make sure to disable it under the DLC tab in the game's Properties on Steam. Failing to follow these steps may result in bugs and crashes during your playthrough.
 
-1. Right click and save as [this install.desktop link](https://raw.githubusercontent.com/Cyphs/steam-deck/master/install.desktop)
+1. Right click and save as [this install.desktop link](https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/master/install.desktop)
 2. Go to the Downloads folder, move the `install.desktop` file to the desktop, and double click to run it
 
 OR
 
 ``` bash
-curl https://raw.githubusercontent.com/Cyphs/steam-deck/master/install.sh | bash -s --
+curl https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/master/install.sh | bash -s --
 ```
 
 ## Vortex

@@ -1,8 +1,8 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Name=Install Vortex
-Exec=/home/deck/.Cyphs/steam-deck-master/vortex/install-vortex.sh
-Icon=/home/deck/.Cyphs/steam-deck-master/vortex/vortex.ico
+Exec=/home/deck/.Cyphs/SteamDeckSTR-master/vortex/install-vortex.sh
+Icon=/home/deck/.Cyphs/SteamDeckSTR-master/vortex/vortex.ico
 Terminal=true
 Type=Application
 StartupNotify=false
