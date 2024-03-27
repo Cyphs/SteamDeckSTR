@@ -8,15 +8,20 @@ This version attempts to simplify the process for playing [Skyrim Together Rebor
 
 Mod Organizer 2 is my mod manager of choice in Windows, but Vortex seems less problematic for running STR on the Deck and might be more beginner-friendly.
 
+Supports only the **latest Steam version of Skyrim Special Edition** (1.6.1170) currently. Support might be added for the GOG version later. MO2 support possibly in the future.
+
 ## Install
+
+* Before continuing, back up your Skyrim saves, make sure you've read through the official STR [Wiki](https://wiki.tiltedphoques.com/tilted-online/general-information/faq) and the [Playguide](https://wiki.tiltedphoques.com/tilted-online/general-information/playguide).
+* After installing Skyrim Special Edition on Steam, [Delete all Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) from the Data folder, as well as the 2 _ResourcePack files. If you own the Anniversary Upgrade DLC, make sure to disable it under the DLC tab in the game's Properties on Steam. Failing to follow these steps may result in bugs and crashes during your playthrough.
 
 1. Right click and save as [this install.desktop link](https://raw.githubusercontent.com/Cyphs/steam-deck/master/install.desktop)
 2. Go to the Downloads folder, move the `install.desktop` file to the desktop, and double click to run it
 
-or
+OR
 
 ``` bash
-curl https://raw.githubusercontent.com/pikdum/steam-deck/master/install.sh | bash -s --
+curl https://raw.githubusercontent.com/Cyphs/steam-deck/master/install.sh | bash -s --
 ```
 
 ## Vortex
@@ -78,15 +83,15 @@ They automate things like:
 
 The game's post-deploy script should be ran every time after modding in Vortex.
 
-> **Note:** If you know what you're doing, could set up symlinks instead for this.  
+> **Note:** If you know what you're doing, you could set up symlinks instead for this.  
 > That way it only needs to be set up once, before starting modding.  
 
-### How to open launcher to change settings afterwards
+### How to open vanilla launcher to change settings afterwards
 
 Using Skyrim as an example:
 
-* After running post-deploy, the game will now start STR instead of the vanilla launcher
-* To open the launcher, install protontricks and launch the underscore-prefixed launcher .exe with it
+* After running post-deploy, the game will replace the vanilla launcher with the Skyrim Together Reborn executable.
+* To open the vanilla Skyrim Special Edition Launcher, install protontricks and launch the underscore-prefixed launcher .exe with it
 
 ## Uninstall
 
@@ -109,4 +114,3 @@ rm -rf ~/.config/steamtinkerlaunch/
 rm -rf ~/.Cyphs/
 rm -rf ~/.local/share/applications/pikdum-vortex.desktop
 ```
-
