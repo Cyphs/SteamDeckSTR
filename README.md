@@ -4,21 +4,24 @@
 
 This is a fork of [pikdum](https://github.com/pikdum)'s [steam-deck](https://github.com/pikdum/steam-deck) repo which is a collection of Steam Deck tools and scripts to help automate some things, starting with installing Vortex.
 
-This version attempts to simplify the process for playing [Skyrim Together Reborn](https://www.nexusmods.com/skyrimspecialedition/mods/69993) (STR) in SteamOS.
+This version attempts to simplify the process for playing [Skyrim Together Reborn](https://www.nexusmods.com/skyrimspecialedition/mods/69993) (STR) in SteamOS. There are other ways to go about this and this might not be the best method, but this aims to be a fast and simple way to enjoy Skyrim Together Reborn on your Steam Deck.
 
-Mod Organizer 2 is my mod manager of choice in Windows, but Vortex seems less problematic for running STR on the Deck and might be more beginner-friendly.
+Mod Organizer 2 is my mod manager of choice on Windows, but Vortex seems less problematic for running STR on the Deck and might be more beginner-friendly.
 
-Supports only the **latest Steam version of Skyrim Special Edition** (1.6.1170) currently. Support might be added for the GOG version later. MO2 support possibly in the future.
+Supports only the **latest Steam version of Skyrim Special Edition** (1.6.1170) currently. Support might be added for the GOG version later. MO2 support hopefully soon.
 
 ## Install
 
 * Before continuing, back up your Skyrim saves, make sure you've read through the official STR [Wiki](https://wiki.tiltedphoques.com/tilted-online/general-information/faq) and the [Playguide](https://wiki.tiltedphoques.com/tilted-online/general-information/playguide).
-* After installing Skyrim Special Edition on Steam, [Delete all Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) from the Data folder, as well as the 2 _ResourcePack files. If you own the Anniversary Upgrade DLC, make sure to disable it under the DLC tab in the game's Properties on Steam. Failing to follow these steps may result in bugs and crashes during your playthrough.
+* After installing Skyrim Special Edition from Steam, [Delete all Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) from the Data folder, as well as the 2 _ResourcePack files. If you own the Anniversary Upgrade DLC, make sure to disable it under the DLC tab in the game's Properties on Steam. Failing to follow these steps may result in bugs and crashes during your playthrough.
+* Run the game normally to generate the necessary data. You can also add `SteamDeck=0 %command%` to the Launch Options under General in the Properties for the game on Steam before running to change the graphics settings. For best performance it might be a good idea to lower it down to High from Ultra. Remove the launch option afterwards.
+
+This script will need to run some commands as sudo to make sure it has the necessary permissions to set everything properly. Always use caution when running things as sudo, but this is safe. 
 
 1. Right click and save as [this install.desktop link](https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/master/install.desktop)
 2. Go to the Downloads folder, move the `install.desktop` file to the desktop, and double click to run it
 
-OR
+OR type this in the terminal (Konsole):
 
 ``` bash
 curl https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/master/install.sh | bash -s --
@@ -31,14 +34,15 @@ After installing, you should have a shortcut on the desktop to install Vortex.
 This will:
 
 0. Install SteamLinuxRuntime Sniper
-1. Install pikdum/vortex-linux
+1. Install [pikdum/vortex-linux](https://github.com/pikdum/vortex-linux)
 2. Use ./vortex-linux to set up Vortex
 3. Add a 'Skyrim Post-Deploy' shortcut to desktop
    * Needs to be run every time after you change mods in Vortex
 4. Map J: to internal games and K: to sd card games
    * E: is the sd card root
+This may take a few minutes!
 
-After modding, run games normally through Game Mode rather than launching through Vortex.
+After installing Skyrim Together Reborn, Address Library (AE), and optionally other mods in Vortex then running the Skyrim Post-Deploy, you can start the game normally through Game Mode rather than launching through Vortex. Symbolic links from the SkyrimTogetherReborn folder will enter the main install folder. SkyrimTogether.exe will replace SkyrimSELauncher.exe and SkyrimSELauncher.exe will be renamed to _SkyrimSELauncher.exe
 
 ### Adding a game
 
@@ -79,7 +83,7 @@ They automate things like:
 
 * Copying required files from Vortex's Documents folder to the game's Documents folder
   * plugins.txt, loadorder.txt, etc.
-* Setting up script extenders to launch through Steam
+* Setting up SkyrimTogether to launch through Steam when running the game normally.
 
 The game's post-deploy script should be ran every time after modding in Vortex.
 
@@ -88,12 +92,14 @@ The game's post-deploy script should be ran every time after modding in Vortex.
 
 ### How to open vanilla launcher to change settings afterwards
 
-Using Skyrim as an example:
-
 * After running post-deploy, the game will replace the vanilla launcher with the Skyrim Together Reborn executable.
-* To open the vanilla Skyrim Special Edition Launcher, install protontricks and launch the underscore-prefixed launcher .exe with it
+* To open the vanilla Skyrim Special Edition Launcher, install protontricks and launch the underscore-prefixed launcher .exe with it. Alternatively, just temporarily rename them back. You can add `SteamDeck=0 %command%` to the Launch Options under General in the Properties for the game on Steam before running to change the graphics settings.
 
 ## Uninstall
+
+* Run Undo-STR on the desktop
+* Open Vortex and Stop Managing the game to remove the mods
+* Use the terminal commands below to get rid of SteamDeckSTR and Vortex
 
 ```bash
 # remove these tools
@@ -102,15 +108,4 @@ rm -rf ~/.Cyphs/
 rm -rf ~/.vortex-linux/
 rm -rf ~/.local/share/applications/vortex.*
 # manually remove desktop icons
-```
-
-## old version uninstall
-
-```bash
-# remove steamtinkerlaunch
-rm -rf ~/stl/
-rm -rf ~/.config/steamtinkerlaunch/
-# remove these tools
-rm -rf ~/.Cyphs/
-rm -rf ~/.local/share/applications/pikdum-vortex.desktop
 ```
