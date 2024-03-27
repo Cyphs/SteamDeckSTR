@@ -1,13 +1,17 @@
-# pikdum's steam deck tools
+# SteamDeckSTR
 
-## what is this
+## What is this?
 
-a collection of steam deck tools and scripts to help automate some things, starting with installing vortex
+This is a fork of [pikdum](https://github.com/pikdum)'s [steam-deck](https://github.com/pikdum/steam-deck) repo which is a collection of Steam Deck tools and scripts to help automate some things, starting with installing Vortex.
 
-## install
+This version attempts to simplify the process for playing [Skyrim Together Reborn](https://www.nexusmods.com/skyrimspecialedition/mods/69993) (STR) in SteamOS.
 
-1. right click and save as [this install.desktop link](https://raw.githubusercontent.com/pikdum/steam-deck/master/install.desktop)
-2. go to the downloads folder, move the `install.desktop` file to the desktop, and double click to run it
+Mod Organizer 2 is my mod manager of choice in Windows, but Vortex seems less problematic for running STR on the Deck and might be more beginner-friendly.
+
+## Install
+
+1. Right click and save as [this install.desktop link](https://raw.githubusercontent.com/Cyphs/steam-deck/master/install.desktop)
+2. Go to the Downloads folder, move the `install.desktop` file to the desktop, and double click to run it
 
 or
 
@@ -15,82 +19,80 @@ or
 curl https://raw.githubusercontent.com/pikdum/steam-deck/master/install.sh | bash -s --
 ```
 
-## vortex
+## Vortex
 
-after installing, you should have a shortcut on the desktop to install vortex
+After installing, you should have a shortcut on the desktop to install Vortex.
 
-this will:
+This will:
 
-0. install SteamLinuxRuntime Sniper
-1. install pikdum/vortex-linux
-2. use ./vortex-linux to set up vortex
-3. add a 'Skyrim Post-Deploy' shortcut to desktop
-   * needs to be run every time after you change mods in Vortex
-   * also adds a 'Fallout 4 Post-Deploy'
-4. map J: to internal games and K: to sd card games
+0. Install SteamLinuxRuntime Sniper
+1. Install pikdum/vortex-linux
+2. Use ./vortex-linux to set up Vortex
+3. Add a 'Skyrim Post-Deploy' shortcut to desktop
+   * Needs to be run every time after you change mods in Vortex
+4. Map J: to internal games and K: to sd card games
    * E: is the sd card root
 
-after modding, run games normally through game mode rather than launching through vortex
+After modding, run games normally through Game Mode rather than launching through Vortex.
 
-### adding a game
+### Adding a game
 
-* will need to manually set the location, use either the J: or K: drives
+* Will need to manually set the location, use either the J: or K: drives
   * J: is internal storage games, K: is sd card games
-* vortex may pop up some warnings about: staging location, deployment method
-   * if it does:
+* Vortex may pop up some warnings about: staging location, deployment method
+   * If it does:
       * walk through their fixes
       * staging folder needs to be on the same drive as the game
         * suggested path works here
       * deployment method should be hardlinks
-   * if it doesn't:
+   * If it doesn't:
       * go to Settings -> Mods
       * set the **Base Path** to:
         * `K:\vortex_mods\{GAME}` if your games are on the sd card
         * `J:\vortex_mods\{GAME}` if your games are on the internal drive
-      * press **Apply**
+      * Press **Apply**
       * **Deployment Method** will now allow you to select `Hardlink deployment`
-      * press **Apply** again
+      * Press **Apply** again
 
-### download with vortex button link handler
+### Download with Vortex button link handler
 
-* might work out of the box, unless you've installed vortex before
-* if it doesn't work, edit these lines in ~~`~/.local/share/applications/mimeapps.list`~~ `~/.config/mimeapps.list`
+* Might work out of the box, unless you've installed Vortex before
+* If it doesn't work, edit these lines in ~~`~/.local/share/applications/mimeapps.list`~~ `~/.config/mimeapps.list`
 ```
 x-scheme-handler/nxm=vortex.desktop
 x-scheme-handler/nxm-protocol=vortex.desktop
 ```
-* run `update-mime-database ~/.local/share/mime/`
-* might need to reboot
-* if still issues, make sure your browser is using the default app
+* Run `update-mime-database ~/.local/share/mime/`
+* Might need to reboot
+* If still issues, make sure your browser is using the default app
 
-### what are these post-deploy shortcuts?
+### What is the post-deploy shortcut?
 
-these are for games that need a bit extra to get things working after modding in Vortex
+These are for games that need a bit extra to get things working after modding in Vortex
 
-they automate things like:
+They automate things like:
 
-* copying required files from Vortex's Documents folder to the game's Documents folder
+* Copying required files from Vortex's Documents folder to the game's Documents folder
   * plugins.txt, loadorder.txt, etc.
-* setting up script extenders to launch through Steam
+* Setting up script extenders to launch through Steam
 
-a game's post-deploy script should be ran every time after modding in vortex
+The game's post-deploy script should be ran every time after modding in Vortex.
 
 > **Note:** If you know what you're doing, could set up symlinks instead for this.  
 > That way it only needs to be set up once, before starting modding.  
-> Might evaluate refactoring to that approach in a v2.
 
-### how to open launcher to change settings afterwards
+### How to open launcher to change settings afterwards
 
-using Skyrim as an example:
+Using Skyrim as an example:
 
-* after running post-deploy, the game will now start SKSE instead of the launcher
-* to open the launcher, install protontricks and launch the underscore-prefixed launcher .exe with it
+* After running post-deploy, the game will now start STR instead of the vanilla launcher
+* To open the launcher, install protontricks and launch the underscore-prefixed launcher .exe with it
 
-## uninstall
+## Uninstall
 
 ```bash
 # remove these tools
-rm -rf ~/.pikdum/
+rm -rf ~/.Cyphs/
 # remove vortex
 rm -rf ~/.vortex-linux/
 rm -rf ~/.local/share/applications/vortex.*
@@ -104,7 +106,7 @@ rm -rf ~/.local/share/applications/vortex.*
 rm -rf ~/stl/
 rm -rf ~/.config/steamtinkerlaunch/
 # remove these tools
-rm -rf ~/.pikdum/
+rm -rf ~/.Cyphs/
 rm -rf ~/.local/share/applications/pikdum-vortex.desktop
 ```
 

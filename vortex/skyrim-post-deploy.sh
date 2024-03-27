@@ -4,21 +4,22 @@ set -euxo pipefail
 SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/"
 SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/"
 
-skse_setup() {
+str_setup() {
+    SKYRIM_TOGETHER_PATH="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/Data/Skyrim Together Reborn/SkyrimTogetherReborn"
     if [ -d "$1" ] &&
-        [ -f "${1}skse64_loader.exe" ] &&
+        [ -f "${SKYRIM_TOGETHER_PATH}/SkyrimTogether.exe" ] &&
         [ -f "${1}SkyrimSELauncher.exe" ]; then
         cd "$1"
-        if ! cmp --silent -- "skse64_loader.exe" "SkyrimSELauncher.exe"; then
-            echo "Swapping SkyrimSELauncher.exe for skse64_loader.exe"
+        if ! cmp --silent -- "${SKYRIM_TOGETHER_PATH}/SkyrimTogether.exe" "SkyrimSELauncher.exe"; then
+            echo "Creating a symlink for SkyrimSELauncher.exe to SkyrimTogether.exe"
             mv SkyrimSELauncher.exe _SkyrimSELauncher.exe
-            cp skse64_loader.exe SkyrimSELauncher.exe
+            ln -s "${SKYRIM_TOGETHER_PATH}/SkyrimTogether.exe" SkyrimSELauncher.exe
         fi
     fi
 }
 
-skse_setup "$SKYRIM_INTERNAL"
-skse_setup "$SKYRIM_EXTERNAL"
+str_setup "$SKYRIM_INTERNAL"
+str_setup "$SKYRIM_EXTERNAL"
 
 APPDATA_VORTEX="$HOME/.vortex-linux/compatdata/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition"
 APPDATA_INTERNAL="$HOME/.local/share/Steam/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"

@@ -1,7 +1,7 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
-Name=Install Pikdum's Tools
-Exec=curl https://raw.githubusercontent.com/pikdum/steam-deck/master/install.sh | bash -s --
+Name=Install SteamDeckSTR
+Exec=curl https://raw.githubusercontent.com/Cyphs/steam-deck/master/install.sh | bash -s --
 Icon=steamdeck-gaming-return
 Terminal=true
 Type=Application

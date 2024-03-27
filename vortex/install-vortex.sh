@@ -13,9 +13,9 @@ DOTNET_URL="https://download.visualstudio.microsoft.com/download/pr/06239090-ba0
 # install steam linux runtime sniper
 steam steam://install/1628350
 
-mkdir -p ~/.pikdum/steam-deck-master/vortex/
+mkdir -p ~/.Cyphs/steam-deck-master/vortex/
 
-cd ~/.pikdum/steam-deck-master/vortex/
+cd ~/.Cyphs/steam-deck-master/vortex/
 
 rm -rf vortex-linux || true
 wget https://github.com/pikdum/vortex-linux/releases/download/$VORTEX_LINUX/vortex-linux
@@ -54,13 +54,7 @@ update-desktop-database || true
 
 rm -f ~/Desktop/install-vortex.desktop
 ln -sf ~/.local/share/applications/vortex.desktop ~/Desktop/
-ln -sf ~/.pikdum/steam-deck-master/vortex/skyrim-post-deploy.desktop ~/Desktop/
-ln -sf ~/.pikdum/steam-deck-master/vortex/skyrimle-post-deploy.desktop ~/Desktop/
-ln -sf ~/.pikdum/steam-deck-master/vortex/fallout4-post-deploy.desktop ~/Desktop/
-ln -sf ~/.pikdum/steam-deck-master/vortex/falloutnv-post-deploy.desktop ~/Desktop/
-ln -sf ~/.pikdum/steam-deck-master/vortex/falloutnv-pre-deploy.desktop ~/Desktop/
-ln -sf ~/.pikdum/steam-deck-master/vortex/fallout3-post-deploy.desktop ~/Desktop/
-ln -sf ~/.pikdum/steam-deck-master/vortex/oblivion-post-deploy.desktop ~/Desktop/
+ln -sf ~/.Cyphs/steam-deck-master/vortex/skyrim-post-deploy.desktop ~/Desktop/
 
 mkdir -p /run/media/mmcblk0p1/vortex-downloads || true
 
