@@ -1,48 +1,41 @@
 #!/usr/bin/env bash
-set -euxo pipefail
+set -exo pipefail
 
 SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/"
 SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/"
 
-undo_setup() {
-    SKYRIM_TOGETHER_PATH="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/Data/SkyrimTogetherReborn"
-    echo "Contents of SKYRIM_TOGETHER_PATH:"
-    ls "${SKYRIM_TOGETHER_PATH}"
-    if [ -d "$1" ] &&
-        [ -L "${1}SkyrimSELauncher.exe" ] &&
-        [ -f "${1}_SkyrimSELauncher.exe" ]; then
-        cd "$1"
-        echo "Current directory: $(pwd)"
-        echo "Removing symlink for SkyrimSELauncher.exe and renaming _SkyrimSELauncher.exe back to SkyrimSELauncher.exe"
-        if sudo rm SkyrimSELauncher.exe; then
-            echo "Symlink removal successful"
-        else
-            echo "Symlink removal failed"
-        fi
-        if sudo mv _SkyrimSELauncher.exe SkyrimSELauncher.exe; then
-            echo "Rename successful"
-        else
-            echo "Rename failed"
-        fi
-        # Remove symbolic links for all files and directories in the SkyrimTogetherReborn folder
-        find "${SKYRIM_TOGETHER_PATH}" -mindepth 1 -exec bash -c '
-            for pathname do
-                src="$pathname"
-                dest="${pathname/#"$SKYRIM_TOGETHER_PATH"/"."}"
-                if [ -L "$dest" ]; then
-                    echo "Removing symlink for $dest"
-                    if sudo rm "$dest"; then
-                        echo "Symlink removal successful"
-                    else
-                        echo "Symlink removal failed"
-                    fi
-                fi
-            done' bash {} +
-    fi
+# Array of files and directories to delete
+FILES_AND_DIRS=("EarlyLoad.dll" "STServer.dll" "SkyrimTogether.exe" "SkyrimTogetherServer.exe" "TPProcess.exe" "chrome_100_percent.pak" "chrome_200_percent.pak" "chrome_elf.dll" "crashpad_handler.exe" "d3dcompiler_47.dll" "discord_game_sdk.dll" "icudtl.dat" "imgui.ini" "libEGL.dll" "libGLESv2.dll" "libcef.dll" "resources.pak" "snapshot_blob.bin" "uv.dll" "v8_context_snapshot.bin" "vk_swiftshader.dll" "vulkan-1.dll" "UI" "assets" "config" "locales" "logs" "swiftshader" "cache" ".sentry-native")
+
+# Function to delete a file or directory
+delete_file_or_dir() {
+  if [ -e "$1" ]; then
+      echo "Deleting $1"
+      sudo rm -rf "$1"
+  else
+      echo "$1 does not exist. Skipping..."
+  fi
 }
 
-undo_setup "$SKYRIM_INTERNAL"
-undo_setup "$SKYRIM_EXTERNAL"
+# Function to rename _SkyrimSELauncher.exe back to SkyrimSELauncher.exe
+rename_launcher() {
+  if [ -f "${1}_SkyrimSELauncher.exe" ]; then
+      echo "Renaming ${1}_SkyrimSELauncher.exe back to ${1}SkyrimSELauncher.exe"
+      mv "${1}_SkyrimSELauncher.exe" "${1}SkyrimSELauncher.exe"
+  else
+      echo "${1}_SkyrimSELauncher.exe does not exist. Skipping..."
+  fi
+}
 
-echo "Uninstall successful! This window will close in 5 seconds....."
+# Delete files and directories from both Skyrim directories
+for FILE_OR_DIR in "${FILES_AND_DIRS[@]}"; do
+    delete_file_or_dir "${SKYRIM_INTERNAL}${FILE_OR_DIR}"
+    delete_file_or_dir "${SKYRIM_EXTERNAL}${FILE_OR_DIR}"
+done
+
+# Rename _SkyrimSELauncher.exe back to SkyrimSELauncher.exe in both Skyrim directories
+rename_launcher "$SKYRIM_INTERNAL"
+rename_launcher "$SKYRIM_EXTERNAL"
+
+echo "Undo script completed. This window will close in 5 seconds....."
 sleep 5
