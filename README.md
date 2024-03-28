@@ -79,6 +79,7 @@ x-scheme-handler/nxm-protocol=vortex.desktop
 * Might need to reboot
 * If still issues, make sure your browser is using the default app
 
+I recommend just downloading the mods in the web browser manually and then dragging and dropping into the Mods section of Vortex. In case you mess up or need to reinstall everything, you won't have to download them again.
 ### What is the post-deploy shortcut?
 
 These are for games that need a bit extra to get things working after modding in Vortex
