@@ -10,6 +10,9 @@ Mod Organizer 2 is my mod manager of choice on Windows, but Vortex seems less pr
 
 Supports only the **latest Steam version of Skyrim Special Edition** (1.6.1170) currently. Support might be added for the GOG version later. MO2 support hopefully soon.
 
+## Status: WIP
+* Works for quickly setting up and playing STR. Need to fix symlinks and permissions later.
+
 ## Install
 
 * Before continuing, back up your Skyrim saves, make sure you've read through the official STR [Wiki](https://wiki.tiltedphoques.com/tilted-online/general-information/faq) and the [Playguide](https://wiki.tiltedphoques.com/tilted-online/general-information/playguide).
