@@ -14,6 +14,7 @@ Supports only the **latest Steam version of Skyrim Special Edition** (1.6.1170) 
 
 * Before continuing, back up your Skyrim saves, make sure you've read through the official STR [Wiki](https://wiki.tiltedphoques.com/tilted-online/general-information/faq) and the [Playguide](https://wiki.tiltedphoques.com/tilted-online/general-information/playguide).
 * After installing Skyrim Special Edition from Steam, [Delete all Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) from the Data folder, as well as the 2 _ResourcePack files. If you own the Anniversary Upgrade DLC, make sure to disable it under the DLC tab in the game's Properties on Steam. Failing to follow these steps may result in bugs and crashes during your playthrough.
+* Install ProtonUp-Qt from the Discover app (Software Center) and use it to install the latest GE-Proton (9-2). then restart Steam. In the Properties for the game, go to Compatibility and force it to use that version. This will prevent crashes. If you know a different Proton version works better, you can try it instead.
 * Run the game normally to generate the necessary data. You can also add `SteamDeck=0 %command%` to the Launch Options under General in the Properties for the game on Steam before running to change the graphics settings. For best performance it might be a good idea to lower it down to High from Ultra. Remove the launch option afterwards.
 
 This script will need to run some commands as sudo to make sure it has the necessary permissions to set everything properly. Always use caution when running things as sudo, but this is safe. 
@@ -47,7 +48,7 @@ After installing Skyrim Together Reborn, Address Library (AE), and optionally ot
 ### Adding a game
 
 * Will need to manually set the location, use either the J: or K: drives
-  * J: is internal storage games, K: is sd card games
+  * J: is internal storage games, K: is sd card games. It is highly recommended to use the internal storage.
 * Vortex may pop up some warnings about: staging location, deployment method
    * If it does:
       * walk through their fixes
