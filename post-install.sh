@@ -9,6 +9,7 @@ if [ ! -f "$HOME/.local/share/applications/vortex.desktop" ]; then
 else
     echo "Creating Vortex desktop shortcuts..."
     ln -sf ~/.Cyphs/SteamDeckSTR-master/vortex/skyrim-post-deploy.desktop ~/Desktop/
+    ln -sf ~/.Cyphs/SteamDeckSTR-master/vortex/Undo-STR.desktop ~/Desktop/
 
     VORTEX_LINUX="v1.3.4"
     PROTON_BUILD="GE-Proton8-27"
