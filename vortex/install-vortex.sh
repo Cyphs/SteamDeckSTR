@@ -13,9 +13,9 @@ DOTNET_URL="https://download.visualstudio.microsoft.com/download/pr/06239090-ba0
 # install steam linux runtime sniper
 steam steam://install/1628350
 
-mkdir -p ~/.Cyphs/SteamDeckSTR-master/vortex/
+mkdir -p ~/.Cyphs/SteamDeckSTR-tests/vortex/
 
-cd ~/.Cyphs/SteamDeckSTR-master/vortex/
+cd ~/.Cyphs/SteamDeckSTR-tests/vortex/
 
 rm -rf vortex-linux || true
 wget https://github.com/pikdum/vortex-linux/releases/download/$VORTEX_LINUX/vortex-linux
@@ -54,8 +54,8 @@ update-desktop-database || true
 
 rm -f ~/Desktop/install-vortex.desktop
 ln -sf ~/.local/share/applications/vortex.desktop ~/Desktop/
-ln -sf ~/.Cyphs/SteamDeckSTR-master/vortex/skyrim-post-deploy.desktop ~/Desktop/
-ln -sf ~/.Cyphs/SteamDeckSTR-master/vortex/Undo-STR.desktop ~/Desktop/
+ln -sf ~/.Cyphs/SteamDeckSTR-tests/vortex/skyrim-post-deploy.desktop ~/Desktop/
+ln -sf ~/.Cyphs/SteamDeckSTR-tests/vortex/Undo-STR.desktop ~/Desktop/
 
 mkdir -p /run/media/mmcblk0p1/vortex-downloads || true
 
