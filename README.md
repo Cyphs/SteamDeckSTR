@@ -28,7 +28,7 @@ This script will need to run some commands as sudo to make sure it has the neces
 OR type this in the terminal (Konsole):
 
 ``` bash
-curl https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/master/install.sh | bash -s --
+curl https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/tests/install.sh | bash -s --
 ```
 
 ## Vortex
