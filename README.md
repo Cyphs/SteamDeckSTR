@@ -22,7 +22,7 @@ Supports only the **latest Steam version of Skyrim Special Edition** (1.6.1170) 
 
 This script will need to run some commands as sudo to make sure it has the necessary permissions to set everything properly. Always use caution when running things as sudo, but this is safe. 
 1. Open the terminal (Konsole) and type `passwd` to set a password for running things as sudo. Keep this password safe, you might need it for other things eventually!
-2. Right click and save as [this install.desktop link](https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/master/install.desktop)
+2. Right click and save as [this install.desktop link](https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/tests/install.desktop)
 3. Go to the Downloads folder, move the `install.desktop` file to the desktop, and double click to run it
 
 OR type this in the terminal (Konsole):
