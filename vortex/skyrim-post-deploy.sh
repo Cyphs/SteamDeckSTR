@@ -69,5 +69,21 @@ copy_or_link "$APPDATA_VORTEX/loadorder.txt" "$APPDATA_EXTERNAL/loadorder.txt"
 copy_or_link "$APPDATA_VORTEX/plugins.txt" "$APPDATA_INTERNAL/plugins.txt"
 copy_or_link "$APPDATA_VORTEX/plugins.txt" "$APPDATA_EXTERNAL/plugins.txt"
 
+# Symlink all Proton versions
+PROTON_DIR="/home/deck/.vortex-linux/proton-builds/"
+STEAM_DIR="~/.steam/root/compatibilitytools.d/"
+
+# Create a symlink for each Proton version
+for dir in $PROTON_DIR/GE-Proton*; do
+    if [ -d "$dir" ]; then
+        symlink_name=$(basename "$dir")
+        if [ ! -L "$STEAM_DIR/$symlink_name" ]; then
+            ln -s "$dir" "$STEAM_DIR/$symlink_name"
+        fi
+    fi
+done
+
+echo "Symlinks created for all Proton versions."
+
 echo "Success! This window will close in 5 seconds....."
 sleep 5

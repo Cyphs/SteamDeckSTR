@@ -42,12 +42,3 @@ STEAM_DIR="~/.steam/root/compatibilitytools.d/"
 
 # Remove any existing symlinks in the compatibilitytools.d directory
 find $STEAM_DIR -type l -exec rm {} \;
-
-# Create a symlink for each Proton version
-for dir in $PROTON_DIR/GE-Proton*; do
-    if [ -d "$dir" ]; then
-        ln -s "$dir" $STEAM_DIR
-    fi
-done
-
-echo "Symlinks created for all Proton versions."
