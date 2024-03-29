@@ -1,7 +1,7 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Name=Undo STR
-Exec=/home/deck/.Cyphs/SteamDeckSTR-master/vortex/Undo-STR.sh
+Exec=/home/deck/.Cyphs/SteamDeckSTR-tests/vortex/Undo-STR.sh
 Icon=uninstall
 Terminal=true
 Type=Application
