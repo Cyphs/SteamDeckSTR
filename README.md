@@ -44,7 +44,8 @@ This will:
    * Needs to be run every time after you change mods in Vortex
 4. Map J: to internal games and K: to sd card games
    * E: is the sd card root
-This may take a few minutes!
+
+**This may take a few minutes!**
 
 After installing Skyrim Together Reborn, Address Library (AE), and optionally other mods in Vortex then running the Skyrim Post-Deploy, you can start the game normally through Game Mode rather than launching through Vortex. Symbolic links from the SkyrimTogetherReborn folder will enter the main install folder. SkyrimTogether.exe will replace SkyrimSELauncher.exe and SkyrimSELauncher.exe will be renamed to _SkyrimSELauncher.exe
 
