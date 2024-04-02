@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euxo pipefail
+set -euo pipefail
 
 VORTEX_LINUX="v1.3.4"
 VORTEX_VERSION="1.9.12"
@@ -89,7 +89,7 @@ fi
 # Restart Steam
 echo "Restarting Steam..."
 killall -s SIGTERM steam || true
-nohup steam > /dev/null 2>&1 &
+xdg-open steam://open/main
 
 echo "Success! Exiting in 5 seconds....."
 sleep 5

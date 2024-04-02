@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -exo pipefail
+set -eo pipefail
 
 SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/"
 SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/"
@@ -46,14 +46,14 @@ str_setup "$SKYRIM_INTERNAL"
 str_setup "$SKYRIM_EXTERNAL"
 
 # Configuration file handling
-echo "Symlinking loadorder.txt and plugins.txt"
+echo "Symlinking loadorder.txt and Plugins.txt"
 mkdir -p "$APPDATA_INTERNAL" || true
 mkdir -p "$APPDATA_EXTERNAL" || true
 
 ln -s "$APPDATA_VORTEX/loadorder.txt" "$APPDATA_INTERNAL/loadorder.txt"
 ln -s "$APPDATA_VORTEX/loadorder.txt" "$APPDATA_EXTERNAL/loadorder.txt"
-ln -s "$APPDATA_VORTEX/plugins.txt" "$APPDATA_INTERNAL/plugins.txt"
-ln -s "$APPDATA_VORTEX/plugins.txt" "$APPDATA_EXTERNAL/plugins.txt"
+ln -s "$APPDATA_VORTEX/Plugins.txt" "$APPDATA_INTERNAL/Plugins.txt"
+ln -s "$APPDATA_VORTEX/Plugins.txt" "$APPDATA_EXTERNAL/Plugins.txt"
 
 echo "Success! This window will close in 5 seconds....."
 sleep 5
