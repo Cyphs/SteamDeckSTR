@@ -122,7 +122,7 @@ echo "Restarting Steam..."
 killall -s SIGTERM steam || true
 echo "Waiting for 3 seconds before reopening Steam..."
 sleep 3
-/usr/bin/steam
+xdg-open /usr/share/applications/steam.desktop
 
 echo "Success! Exiting in 5 seconds....."
 sleep 5
