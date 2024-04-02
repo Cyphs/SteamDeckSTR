@@ -86,10 +86,43 @@ else
     echo "The game is not installed in either the internal or external location."
 fi
 
+# Define the files to backup
+FILES_TO_BACKUP=("_ResourcePack.bsa" "_ResourcePack.esl" "ccBGSSSE001-Fish.bsa" "ccBGSSSE001-Fish.esm" "ccBGSSSE025-AdvDSGS.bsa" "ccBGSSSE025-AdvDSGS.esm" "ccBGSSSE037-Curios.bsa" "ccBGSSSE037-Curios.esl" "ccQDRSSE001-SurvivalMode.bsa" "ccQDRSSE001-SurvivalMode.esl")
+
+# Define the backup directory
+BACKUP_DIR="$HOME/.Cyphs/SteamDeckSTR-tests/CC Backup/"
+
+# Create the backup directory if it doesn't exist
+mkdir -p "$BACKUP_DIR"
+
+# Backup files from both Skyrim directories
+SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/Data/"
+SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/Data/"
+
+if [ -d "$SKYRIM_INTERNAL" ]; then
+    echo "Backing up files from $SKYRIM_INTERNAL to $BACKUP_DIR"
+    for FILE in "${FILES_TO_BACKUP[@]}"; do
+        if [ -f "${SKYRIM_INTERNAL}${FILE}" ]; then
+            mv "${SKYRIM_INTERNAL}${FILE}" "$BACKUP_DIR"
+        fi
+    done
+fi
+
+if [ -d "$SKYRIM_EXTERNAL" ]; then
+    echo "Backing up files from $SKYRIM_EXTERNAL to $BACKUP_DIR"
+    for FILE in "${FILES_TO_BACKUP[@]}"; do
+        if [ -f "${SKYRIM_EXTERNAL}${FILE}" ]; then
+            mv "${SKYRIM_EXTERNAL}${FILE}" "$BACKUP_DIR"
+        fi
+    done
+fi
+
 # Restart Steam
 echo "Restarting Steam..."
 killall -s SIGTERM steam || true
-xdg-open steam://open/main
+echo "Waiting for 3 seconds before reopening Steam..."
+sleep 3
+/usr/bin/steam
 
 echo "Success! Exiting in 5 seconds....."
 sleep 5

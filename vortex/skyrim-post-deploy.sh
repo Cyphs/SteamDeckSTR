@@ -55,5 +55,12 @@ ln -s "$APPDATA_VORTEX/loadorder.txt" "$APPDATA_EXTERNAL/loadorder.txt"
 ln -s "$APPDATA_VORTEX/Plugins.txt" "$APPDATA_INTERNAL/Plugins.txt"
 ln -s "$APPDATA_VORTEX/Plugins.txt" "$APPDATA_EXTERNAL/Plugins.txt"
 
+# Restart Steam
+echo "Restarting Steam..."
+killall -s SIGTERM steam || true
+echo "Waiting for 3 seconds before reopening Steam..."
+sleep 3
+/usr/bin/steam
+
 echo "Success! This window will close in 5 seconds....."
 sleep 5
