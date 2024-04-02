@@ -36,9 +36,3 @@ fi
 
 mkdir -p /run/media/mmcblk0p1/vortex-downloads || true
 
-# Symlink all Proton versions
-PROTON_DIR="/home/deck/.vortex-linux/proton-builds/"
-STEAM_DIR="~/.steam/root/compatibilitytools.d/"
-
-# Remove any existing symlinks in the compatibilitytools.d directory
-find $STEAM_DIR -type l -exec rm {} \;
