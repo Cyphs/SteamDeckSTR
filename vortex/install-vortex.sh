@@ -59,5 +59,37 @@ ln -sf ~/.Cyphs/SteamDeckSTR-tests/vortex/Undo-STR.desktop ~/Desktop/
 
 mkdir -p /run/media/mmcblk0p1/vortex-downloads || true
 
-echo "Success! Exiting in 3..."
-sleep 3
+# Symlink all Proton versions
+PROTON_DIR="/home/deck/.vortex-linux/proton-builds/"
+STEAM_DIR="/home/deck/.steam/root/compatibilitytools.d/"
+
+# Create a symlink for each Proton version
+for dir in $PROTON_DIR/GE-Proton*; do
+    if [ -d "$dir" ]; then
+        symlink_name=$(basename "$dir")
+        if [ ! -L "$STEAM_DIR/$symlink_name" ]; then
+            ln -s "$dir" "$STEAM_DIR/$symlink_name"
+        fi
+    fi
+done
+
+# Set the Proton version for the game
+INTERNAL_PATH="/home/deck/.steam/steam/steamapps/compatdata/489830/"
+EXTERNAL_PATH="/run/media/mmcblk0p1/steamapps/compatdata/489830/"
+
+echo "Setting Proton version for the game..."
+if [ -d "$INTERNAL_PATH" ]; then
+    echo "$PROTON_BUILD" > "${INTERNAL_PATH}version"
+elif [ -d "$EXTERNAL_PATH" ]; then
+    echo "$PROTON_BUILD" > "${EXTERNAL_PATH}version"
+else
+    echo "The game is not installed in either the internal or external location."
+fi
+
+# Restart Steam
+echo "Restarting Steam..."
+killall -s SIGTERM steam || true
+nohup steam > /dev/null 2>&1 &
+
+echo "Success! Exiting in 5 seconds....."
+sleep 5
