@@ -1,0 +1,8 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=Update SteamDeckSTR
+Exec=curl https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/master/install.sh | bash -s --
+Icon=image-red-eye-symbolic
+Terminal=true
+Type=Application
+StartupNotify=false
