@@ -2,7 +2,7 @@
 [Desktop Entry]
 Name=Skyrim SE/AE Post-Deploy
 Exec=/home/deck/.Cyphs/SteamDeckSTR-tests/vortex/skyrim-post-deploy.sh
-Icon=/home/deck/.Cyphs/SteamDeckSTR-tests/vortex/SkyrimTogether.ico
+Icon=/home/deck/.Cyphs/SteamDeckSTR-tests/vortex/STRDeck.ico
 Terminal=true
 Type=Application
 StartupNotify=false

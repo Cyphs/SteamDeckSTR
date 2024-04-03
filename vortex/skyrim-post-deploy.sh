@@ -3,7 +3,8 @@ set -eo pipefail
 
 SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/"
 SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/"
-SKYRIM_TOGETHER_PATH="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/Data/SkyrimTogetherReborn"
+SKYRIM_TOGETHER_PATH_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/Data/SkyrimTogetherReborn"
+SKYRIM_TOGETHER_PATH_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/Data/SkyrimTogetherReborn"
 
 APPDATA_VORTEX="$HOME/.vortex-linux/compatdata/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition"
 APPDATA_INTERNAL="$HOME/.local/share/Steam/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
@@ -11,10 +12,10 @@ APPDATA_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/drive_c/u
 
 str_setup() {
     echo "Contents of SKYRIM_TOGETHER_PATH:"
-    ls "${SKYRIM_TOGETHER_PATH}"
+    ls "$2"
 
     if [ -d "$1" ] &&
-       [ -f "${SKYRIM_TOGETHER_PATH}/SkyrimTogether.exe" ] &&
+       [ -f "${2}/SkyrimTogether.exe" ] &&
        [ -f "${1}SkyrimSELauncher.exe" ]; then
         echo "Current directory: $(pwd)"
 
@@ -25,11 +26,11 @@ str_setup() {
 
         echo "Symlinking SkyrimTogether.exe"
         if [ ! -L "${1}SkyrimSELauncher.exe" ]; then
-            ln -s "${SKYRIM_TOGETHER_PATH}/SkyrimTogether.exe" "${1}SkyrimSELauncher.exe" || echo "Failed to create launcher symlink"
+            ln -s "${2}/SkyrimTogether.exe" "${1}SkyrimSELauncher.exe" || echo "Failed to create launcher symlink"
         fi
 
         echo "Symlinking mod content"
-        cd "${SKYRIM_TOGETHER_PATH}"
+        cd "${2}"
         find . -type f -exec bash -c '
             src="$0"
             dest="$1${src#./}"  # Remove leading ./ from src, then concatenate with the destination path
@@ -42,8 +43,9 @@ str_setup() {
 }
 
 # Setup for both Skyrim directories
-str_setup "$SKYRIM_INTERNAL"
-str_setup "$SKYRIM_EXTERNAL"
+str_setup "$SKYRIM_INTERNAL" "$SKYRIM_TOGETHER_PATH_INTERNAL"
+str_setup "$SKYRIM_EXTERNAL" "$SKYRIM_TOGETHER_PATH_EXTERNAL"
+
 
 # Configuration file handling
 echo "Symlinking loadorder.txt and Plugins.txt"
