@@ -48,6 +48,14 @@ for FILE_OR_DIR in "${FILES_AND_DIRS[@]}"; do
     delete_file_or_dir "${SKYRIM_EXTERNAL}${FILE_OR_DIR}"
 done
 
+# Delete files that start with crash_UTC in both Skyrim directories
+for FILE in "${SKYRIM_INTERNAL}"crash_UTC*; do
+    delete_file_or_dir "$FILE"
+done
+for FILE in "${SKYRIM_EXTERNAL}"crash_UTC*; do
+    delete_file_or_dir "$FILE"
+done
+
 # Rename _SkyrimSELauncher.exe back to SkyrimSELauncher.exe in both Skyrim directories
 rename_launcher "$SKYRIM_INTERNAL"
 rename_launcher "$SKYRIM_EXTERNAL"
