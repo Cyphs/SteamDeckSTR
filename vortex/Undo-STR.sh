@@ -4,6 +4,9 @@ set -eo pipefail
 SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/"
 SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/"
 
+APPDATA_INTERNAL="$HOME/.local/share/Steam/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
+APPDATA_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
+
 CC_BACKUP="$HOME/.Cyphs/SteamDeckSTR-tests/CC Backup/"
 
 # Array of files and directories to delete
@@ -55,6 +58,12 @@ done
 for FILE in "${SKYRIM_EXTERNAL}"crash_UTC*; do
     delete_file_or_dir "$FILE"
 done
+
+# Delete loadorder.txt and Plugins.txt symlinks from both AppData directories
+delete_file_or_dir "${APPDATA_INTERNAL}loadorder.txt"
+delete_file_or_dir "${APPDATA_INTERNAL}Plugins.txt"
+delete_file_or_dir "${APPDATA_EXTERNAL}loadorder.txt"
+delete_file_or_dir "${APPDATA_EXTERNAL}Plugins.txt"
 
 # Rename _SkyrimSELauncher.exe back to SkyrimSELauncher.exe in both Skyrim directories
 rename_launcher "$SKYRIM_INTERNAL"
