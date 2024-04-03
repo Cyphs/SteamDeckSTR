@@ -1,6 +1,6 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
-Name=Skyrim SE/AE Post-Deploy
+Name=STR Post-Deploy
 Exec=/home/deck/.Cyphs/SteamDeckSTR-tests/vortex/skyrim-post-deploy.sh
 Icon=/home/deck/.Cyphs/SteamDeckSTR-tests/vortex/STRDeck.ico
 Terminal=true
