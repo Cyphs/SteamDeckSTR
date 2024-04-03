@@ -86,8 +86,10 @@ if [ -f "$USER_REG_PATH_EXTERNAL" ]; then
 fi
 
 # Restart Steam
-echo "Exiting Steam... Launch Steam again when done."
-killall -s SIGTERM steam || true
+echo "Restarting Steam. Please wait..."
+steam -shutdown
+while pgrep -x "steam" > /dev/null; do sleep 1; done
+nohup steam > /dev/null 2>&1 &
 
 echo "Success! This window will close in 5 seconds....."
 sleep 5
