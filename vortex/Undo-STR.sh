@@ -39,11 +39,12 @@ rename_launcher() {
 restore_file() {
   if [ -f "${CC_BACKUP}/${2}" ]; then
       echo "Restoring ${2}"
-      mv "${CC_BACKUP}/${2}" "${1}${2}"
+      mv "${CC_BACKUP}/${2}" "${1}Data/${2}"
   else
       echo "${2} does not exist in CC Backup. Skipping..."
   fi
 }
+
 
 # Delete files and directories from both Skyrim directories
 for FILE_OR_DIR in "${FILES_AND_DIRS[@]}"; do
