@@ -1,5 +1,7 @@
 # Steam Deck STR
 
+![SDSTR](vortex\STRDeck.ico)
+
 ## What is this?
 
 This is a set of scripts based on [pikdum](https://github.com/pikdum)'s [steam-deck](https://github.com/pikdum/steam-deck) repo which is a collection of Steam Deck tools and scripts to help automate some things, starting with installing Vortex.
@@ -10,10 +12,17 @@ Mod Organizer 2 is my mod manager of choice on Windows, but Vortex seems more st
 
 Supports only the **latest Steam version of Skyrim Special Edition** (1.6.1170) currently. Support might be added for the GOG version later. MO2 support hopefully soon.
 
+**Important Note:** Skyrim Together only provides support for Windows on their official social media spaces (Discord, Reddit, etc.) If you have issues using this, do not ask for support there. You can [submit an issue here](https://github.com/Cyphs/SteamDeckSTR/issues/new/choose) or message me on Discord: internalerrorx
+
 # Install
 
+These scripts assume that the game is in the default location on either the Internal storage (recommended) or an SD card. For now, please leave it as default. This might become more interactive and configurable for other locations in the future.
+
 * Before continuing, back up your Skyrim saves, make sure you've read through the official STR [Wiki](https://wiki.tiltedphoques.com/tilted-online/general-information/faq) and the [Playguide](https://wiki.tiltedphoques.com/tilted-online/general-information/playguide).
-* It's recommended to start with a fresh installation so uninstall the game if currently installed first. If you own the Anniversary Upgrade DLC, make sure to [disable it under the DLC tab](https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/tests/files/image.gif) in the game's Properties on Steam. After reinstalling Skyrim Special Edition from Steam, don't run it yet. Failing to follow these steps exactly as written may result in bugs and crashes during your playthrough!
+
+* It's recommended to start with a fresh installation, so uninstall the game if currently installed first. If you own the Anniversary Upgrade DLC, make sure to [disable it under the DLC tab](https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/tests/files/image.gif) in the game's Properties on Steam before installing. If you have other Creations, be sure to [uninstall them](https://help.bethesda.net/#en/answer/36378) as well.
+
+* After reinstalling Skyrim Special Edition from Steam, **don't run it yet**. Failing to follow these steps exactly as written may result in bugs and crashes during your playthrough!
 
 Proceed to installing SteamDeckSTR. 
 
@@ -42,21 +51,21 @@ This will automatically:
 5. Map J: to Internal games and K: to SD Card games in Vortex
    * E: Is the SD Card root
 6. [Delete all Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) (Survival, Fishing, _ResourcePack, etc.) to reduce bugs and crashes with STR
-   * They'll be backed up to `$HOME/.Cyphs/SteamDeckSTR-master/CC Backup/` in case you need them again, but can also be restored by verifying game files on Steam
+   * They'll be backed up to `/home/deck/.Cyphs/SteamDeckSTR-master/CC Backup/` in case you need them again, but can also be restored by verifying game files on Steam
 
 **This may take a few minutes!**
 
 ## Generate the Game Data
 
-* After installing Vortex, don't run it yet. Right-click on Skyrim Special Edition, go to Properties > Compatibility > Force it to use GE-Proton8-27
+* After installing Vortex, **don't run it yet**. In the Steam Library: right-click on Skyrim Special Edition, go to Properties > Compatibility > Force it to use GE-Proton8-27
 
 * Run the game normally through Steam so it can generate all necessary data for it to work correctly such as setting SkyrimPrefs.ini and syncing your cloud saves from Steam cloud. 
 
 * You can also add `SteamDeck=0 %command%` to the Launch Options under General in the Properties for the game on Steam before running to change the graphics settings. For best performance it might be a good idea to lower it down to High from Ultra. Remove the launch option afterwards. 
 
-* You can also start a new character now since it's recommended to create one without mods, CC content/Anniversary Upgrade DLC removed and play alone until at least escaping from Helgen and exiting the cave. Creating a character with other mods or CC content then removing them later can cause major issues, so make sure once again that those are removed first.
+* You can start a new character now if not already done since it's recommended to create one without mods, CC content/Anniversary Upgrade DLC removed and play alone until at least escaping from Helgen and exiting the cave. Creating a character with other mods or CC content and then removing them later can cause major issues, so make sure once again that those are removed first.
 
-* Exit the game if running. 
+* Exit the game if running and proceed to running Vortex for the first time.
 
 ## Setting up Vortex
 
@@ -95,7 +104,7 @@ x-scheme-handler/nxm-protocol=vortex.desktop
 * Might need to reboot
 * If issues persist, make sure your browser is using the default app
 
-## Install STR Requirements
+## Install the STR Requirements
 
 After installing Skyrim Together Reborn, Address Library (AE), and optionally other mods* in Vortex then running the STR Post-Deploy script, you can start the game normally through Game Mode rather than launching through Vortex. SkyrimTogether.exe will replace SkyrimSELauncher.exe and SkyrimSELauncher.exe will be renamed to _SkyrimSELauncher.exe
 
@@ -115,9 +124,15 @@ It automates things like:
 * After running STR Post-Deploy, the game will replace the vanilla launcher (SkyrimSELauncher.exe) with the Skyrim Together Reborn executable.
 * To open the vanilla Skyrim Special Edition Launcher, install protontricks and launch the underscore-prefixed launcher .exe with it. Alternatively, just temporarily rename them back. You can add `SteamDeck=0 %command%` to the Launch Options under General in the Properties for the game on Steam before running to change the graphics settings.
 
+## Currently Known Issues
+
+* Using the Steam virtual keyboard in Gaming Mode then closing it crashes the game. This may prevent you from using the text chat without an external keyboard connected.
+
+* The F3 key for the debug UI overlay does not work. This may prevent you from using things like the quest debugger as the Party Leader to advance through bugged quests.
+
 ## Uninstall
 
-1. Run Undo-STR on the desktop (This will also restore the Creation Club content)
+1. Run Undo-STR on the desktop (This will also restore the Creation Club content to the Data folder)
 2. Open Vortex and Stop Managing the game to remove the mods
 3. Copy and paste the terminal (Konsole) commands below to get rid of SteamDeckSTR and Vortex
 
