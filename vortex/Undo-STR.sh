@@ -36,7 +36,6 @@ rename_launcher() {
 }
 
 # Function to restore a file
-# Function to restore a file
 restore_file() {
   if [ -f "${CC_BACKUP}/${2}" ] && [ -d "${1}Data/" ]; then
       echo "Restoring ${2}"

@@ -11,12 +11,9 @@ APPDATA_INTERNAL="$HOME/.local/share/Steam/steamapps/compatdata/489830/pfx/drive
 APPDATA_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
 
 str_setup() {
-    echo "Contents of SKYRIM_TOGETHER_PATH:"
-    ls "$2"
-
-    if [ -d "$1" ] &&
-       [ -f "${2}/SkyrimTogether.exe" ] &&
-       [ -f "${1}SkyrimSELauncher.exe" ]; then
+    if [ -d "$1" ] && [ -d "$2" ] && [ -f "${2}/SkyrimTogether.exe" ] && [ -f "${1}SkyrimSELauncher.exe" ]; then
+        echo "Contents of SKYRIM_TOGETHER_PATH:"
+        ls "$2"
         echo "Current directory: $(pwd)"
 
         echo "Renaming launcher (if needed)"
@@ -46,13 +43,10 @@ str_setup() {
 str_setup "$SKYRIM_INTERNAL" "$SKYRIM_TOGETHER_PATH_INTERNAL"
 str_setup "$SKYRIM_EXTERNAL" "$SKYRIM_TOGETHER_PATH_EXTERNAL"
 
-
 # Configuration file handling
 echo "Symlinking loadorder.txt and Plugins.txt"
-mkdir -p "$APPDATA_INTERNAL" || true
-mkdir -p "$APPDATA_EXTERNAL" || true
-
-if [ -d "$APPDATA_INTERNAL" ]; then
+if [ -d "$APPDATA_INTERNAL" ] && [ -d "$APPDATA_VORTEX" ]; then
+    mkdir -p "$APPDATA_INTERNAL" || true
     if [ ! -L "$APPDATA_INTERNAL/loadorder.txt" ]; then
         ln -s "$APPDATA_VORTEX/loadorder.txt" "$APPDATA_INTERNAL/loadorder.txt"
     fi
@@ -60,7 +54,8 @@ if [ -d "$APPDATA_INTERNAL" ]; then
     ln -s "$APPDATA_VORTEX/plugins.txt" "$APPDATA_INTERNAL/Plugins.txt"
 fi
 
-if [ -d "$APPDATA_EXTERNAL" ]; then
+if [ -d "$APPDATA_EXTERNAL" ] && [ -d "$APPDATA_VORTEX" ]; then
+    mkdir -p "$APPDATA_EXTERNAL" || true
     if [ ! -L "$APPDATA_EXTERNAL/loadorder.txt" ]; then
         ln -s "$APPDATA_VORTEX/loadorder.txt" "$APPDATA_EXTERNAL/loadorder.txt"
     fi
@@ -73,13 +68,13 @@ USER_REG_PATH_INTERNAL="/home/deck/.steam/steam/steamapps/compatdata/489830/pfx/
 USER_REG_PATH_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/user.reg"
 TIMESTAMP=$(date +%s)
 
-if [ -f "$USER_REG_PATH_INTERNAL" ]; then
+if [ -f "$USER_REG_PATH_INTERNAL" ] && [ -d "$HOME/.steam/steam/steamapps/compatdata/489830/pfx/" ]; then
     echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >> "$USER_REG_PATH_INTERNAL"
     echo "\"TitleExe\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >> "$USER_REG_PATH_INTERNAL"
     echo "\"TitlePath\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >> "$USER_REG_PATH_INTERNAL"
 fi
 
-if [ -f "$USER_REG_PATH_EXTERNAL" ]; then
+if [ -f "$USER_REG_PATH_EXTERNAL" ] && [ -d "/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/" ]; then
     echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >> "$USER_REG_PATH_EXTERNAL"
     echo "\"TitleExe\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >> "$USER_REG_PATH_EXTERNAL"
     echo "\"TitlePath\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >> "$USER_REG_PATH_EXTERNAL"
