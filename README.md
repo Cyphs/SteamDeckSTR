@@ -1,5 +1,7 @@
 # Steam Deck STR
 
+![SDSTR](https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/tests/files/Steam%20Deck%20STR.png)
+
 ## What is this?
 
 This is a set of scripts based on [pikdum](https://github.com/pikdum)'s [steam-deck](https://github.com/pikdum/steam-deck) repo which is a collection of Steam Deck tools and scripts to help automate some things, starting with installing Vortex.
