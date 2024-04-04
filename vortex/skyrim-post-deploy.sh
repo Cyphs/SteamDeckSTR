@@ -10,6 +10,28 @@ APPDATA_VORTEX="$HOME/.vortex-linux/compatdata/pfx/drive_c/users/steamuser/AppDa
 APPDATA_INTERNAL="$HOME/.local/share/Steam/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
 APPDATA_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
 
+CC_BACKUP="$HOME/.Cyphs/SteamDeckSTR-master/CC Backup/"
+
+FILES_TO_BACKUP=("_ResourcePack.bsa" "_ResourcePack.esl" "ccBGSSSE001-Fish.bsa" "ccBGSSSE001-Fish.esm" "ccBGSSSE025-AdvDSGS.bsa" "ccBGSSSE025-AdvDSGS.esm" "ccBGSSSE037-Curios.bsa" "ccBGSSSE037-Curios.esl" "ccQDRSSE001-SurvivalMode.bsa" "ccQDRSSE001-SurvivalMode.esl")
+
+# Function to remove and backup CC Content
+backup_file() {
+  if [ -f "${1}Data/${2}" ]; then
+      echo "CC content found, removing ${2} and saving to CC Backup"
+      mv "${1}Data/${2}" "${CC_BACKUP}/"
+  fi
+}
+
+# Backup files from both Skyrim directories
+for FILE in "${FILES_TO_BACKUP[@]}"; do
+    if [ -d "$SKYRIM_INTERNAL" ]; then
+        backup_file "$SKYRIM_INTERNAL" "$FILE"
+    fi
+    if [ -d "$SKYRIM_EXTERNAL" ]; then
+        backup_file "$SKYRIM_EXTERNAL" "$FILE"
+    fi
+done
+
 str_setup() {
     if [ -d "$1" ] && [ -d "$2" ] && [ -f "${2}/SkyrimTogether.exe" ] && [ -f "${1}SkyrimSELauncher.exe" ]; then
         echo "Contents of SKYRIM_TOGETHER_PATH:"
