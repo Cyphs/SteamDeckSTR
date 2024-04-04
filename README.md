@@ -1,6 +1,6 @@
 # Steam Deck STR
 
-![SDSTR](vortex/STRDeck.ico)
+![SDSTR](https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/tests/files/Steam%20Deck%20STR.png)
 
 ## What is this?
 
