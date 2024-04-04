@@ -36,12 +36,11 @@ rename_launcher() {
 }
 
 # Function to restore a file
+# Function to restore a file
 restore_file() {
-  if [ -f "${CC_BACKUP}/${2}" ]; then
+  if [ -f "${CC_BACKUP}/${2}" ] && [ -d "${1}Data/" ]; then
       echo "Restoring ${2}"
       mv "${CC_BACKUP}/${2}" "${1}Data/${2}"
-  else
-      echo "${2} does not exist in CC Backup. Skipping..."
   fi
 }
 
