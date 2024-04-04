@@ -1,6 +1,6 @@
 # Steam Deck STR
 
-![SDSTR](vortex\STRDeck.ico)
+![SDSTR](vortex/STRDeck.ico)
 
 ## What is this?
 
