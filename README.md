@@ -24,6 +24,9 @@ These scripts assume that the game is in the default location on either the Inte
 
 * After reinstalling Skyrim Special Edition from Steam, **don't run it yet**. Failing to follow these steps exactly as written may result in bugs and crashes during your playthrough!
 
+**An installation video is also available on YouTube:**
+https://www.youtube.com/watch?v=hMkb8LXlerI
+
 Proceed to installing SteamDeckSTR. 
 
 ## SteamDeckSTR:
