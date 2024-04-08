@@ -136,7 +136,7 @@ It automates things like:
 
 ## Currently Known Issues
 
-* Using the Steam virtual keyboard in Gaming Mode then closing it crashes the game. This may prevent you from using the text chat without an external keyboard connected. You mgiht also need an external keyboard or remote desktop program at least once to enter a private server's IP address. It should be saved in the UI the next time it's launched.
+* Using the Steam virtual keyboard in Gaming Mode then closing it crashes the game. This may prevent you from using the text chat without an external keyboard connected. You might also need an external keyboard or remote desktop program at least once to enter a private server's IP address. It should be saved in the UI the next time it's launched.
 
 * The F3 key for the debug UI overlay does not work. This may prevent you from using things like the quest debugger as the Party Leader to advance through bugged quests.
 
