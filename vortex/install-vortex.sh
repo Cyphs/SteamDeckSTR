@@ -59,6 +59,9 @@ ln -sf ~/.Cyphs/SteamDeckSTR-master/vortex/Undo-STR.desktop ~/Desktop/
 
 mkdir -p /run/media/mmcblk0p1/vortex-downloads || true
 
+# Create the Proton directory if it does not exist
+mkdir -p "/home/deck/.steam/root/compatibilitytools.d/"
+
 # Symlink all Proton versions
 PROTON_DIR="/home/deck/.vortex-linux/proton-builds/"
 STEAM_DIR="/home/deck/.steam/root/compatibilitytools.d/"
