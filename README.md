@@ -62,9 +62,13 @@ This will automatically:
 
 * After installing Vortex, **don't run it yet**. In the Steam Library: right-click on Skyrim Special Edition, go to Properties > Compatibility > Force it to use GE-Proton8-27
 
-* Run the game normally through Steam so it can generate all necessary data for it to work correctly such as setting SkyrimPrefs.ini and syncing your cloud saves from Steam cloud. 
+* Before running, you should also add:
+```
+SteamDeck=0 %command%
+```
+to the Launch Options under General in the Properties for the game on Steam before running to change the graphics settings. For best performance it might be a good idea to lower it down to High from Ultra. Remove the launch option afterwards.
 
-* You can also add `SteamDeck=0 %command%` to the Launch Options under General in the Properties for the game on Steam before running to change the graphics settings. For best performance it might be a good idea to lower it down to High from Ultra. Remove the launch option afterwards. 
+* Run the game normally through Steam so it can generate all necessary data for it to work correctly such as setting SkyrimPrefs.ini and syncing your cloud saves from Steam cloud.  
 
 * You can start a new character now if not already done since it's recommended to create one without mods, CC content/Anniversary Upgrade DLC removed and play alone until at least escaping from Helgen and exiting the cave. Creating a character with other mods or CC content and then removing them later can cause major issues, so make sure once again that those are removed first.
 
