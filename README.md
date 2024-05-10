@@ -53,7 +53,7 @@ This will automatically:
    * This will set up various things for STR and mods to run correctly when ran through Steam
 5. Map J: to Internal games and K: to SD Card games in Vortex
    * E: Is the SD Card root
-6. [Delete all Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) (Survival, Fishing, _ResourcePack, etc.) to reduce bugs and crashes with STR
+6. [Delete all included Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) (Survival, Fishing, etc.) to reduce bugs and crashes with STR
    * They'll be backed up to `/home/deck/.Cyphs/SteamDeckSTR-master/CC Backup/` in case you need them again, but can also be restored by verifying game files on Steam
 
 **This may take a few minutes!**
