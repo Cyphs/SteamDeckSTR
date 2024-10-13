@@ -2,17 +2,16 @@
 set -eo pipefail
 
 SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/"
-SKYRIM_EXTERNAL_1="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/"
-SKYRIM_EXTERNAL_2="/run/media/mmcblk0p1/SteamLibrary/steamapps/common/Skyrim Special Edition/"
+SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/"
 SKYRIM_TOGETHER_PATH_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/Data/SkyrimTogetherReborn"
-SKYRIM_TOGETHER_PATH_EXTERNAL_1="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/Data/SkyrimTogetherReborn"
-SKYRIM_TOGETHER_PATH_EXTERNAL_2="/run/media/mmcblk0p1/SteamLibrary/steamapps/common/Skyrim Special Edition/Data/SkyrimTogetherReborn"
+SKYRIM_TOGETHER_PATH_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/Data/SkyrimTogetherReborn"
 
 APPDATA_VORTEX="$HOME/.vortex-linux/compatdata/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition"
 APPDATA_INTERNAL="$HOME/.local/share/Steam/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
-APPDATA_EXTERNAL_1="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
-APPDATA_EXTERNAL_2="/run/media/mmcblk0p1/SteamLibrary/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
+APPDATA_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
+
 CC_BACKUP="$HOME/.Cyphs/SteamDeckSTR-master/CC Backup/"
+
 FILES_TO_BACKUP=("ccBGSSSE001-Fish.bsa" "ccBGSSSE001-Fish.esm" "ccBGSSSE025-AdvDSGS.bsa" "ccBGSSSE025-AdvDSGS.esm" "ccBGSSSE037-Curios.bsa" "ccBGSSSE037-Curios.esl" "ccQDRSSE001-SurvivalMode.bsa" "ccQDRSSE001-SurvivalMode.esl")
 
 # Function to remove and backup CC Content
@@ -28,11 +27,8 @@ for FILE in "${FILES_TO_BACKUP[@]}"; do
     if [ -d "$SKYRIM_INTERNAL" ]; then
         backup_file "$SKYRIM_INTERNAL" "$FILE"
     fi
-    if [ -d "$SKYRIM_EXTERNAL_1" ]; then
-        backup_file "$SKYRIM_EXTERNAL_1" "$FILE"
-    fi
-    if [ -d "$SKYRIM_EXTERNAL_2" ]; then
-        backup_file "$SKYRIM_EXTERNAL_2" "$FILE"
+    if [ -d "$SKYRIM_EXTERNAL" ]; then
+        backup_file "$SKYRIM_EXTERNAL" "$FILE"
     fi
 done
 
@@ -67,8 +63,7 @@ str_setup() {
 
 # Setup for both Skyrim directories
 str_setup "$SKYRIM_INTERNAL" "$SKYRIM_TOGETHER_PATH_INTERNAL"
-str_setup "$SKYRIM_EXTERNAL_1" "$SKYRIM_TOGETHER_PATH_EXTERNAL_1"
-str_setup "$SKYRIM_EXTERNAL_2" "$SKYRIM_TOGETHER_PATH_EXTERNAL_2"
+str_setup "$SKYRIM_EXTERNAL" "$SKYRIM_TOGETHER_PATH_EXTERNAL"
 
 # Configuration file handling
 echo "Symlinking loadorder.txt and Plugins.txt"
@@ -81,65 +76,37 @@ if [ -d "$APPDATA_INTERNAL" ] && [ -d "$APPDATA_VORTEX" ]; then
     ln -s "$APPDATA_VORTEX/plugins.txt" "$APPDATA_INTERNAL/Plugins.txt"
 fi
 
-if [ -d "$APPDATA_EXTERNAL_1" ] && [ -d "$APPDATA_VORTEX" ]; then
-    mkdir -p "$APPDATA_EXTERNAL_1" || true
-    if [ ! -L "$APPDATA_EXTERNAL_1/loadorder.txt" ]; then
-        ln -s "$APPDATA_VORTEX/loadorder.txt" "$APPDATA_EXTERNAL_1/loadorder.txt"
+if [ -d "$APPDATA_EXTERNAL" ] && [ -d "$APPDATA_VORTEX" ]; then
+    mkdir -p "$APPDATA_EXTERNAL" || true
+    if [ ! -L "$APPDATA_EXTERNAL/loadorder.txt" ]; then
+        ln -s "$APPDATA_VORTEX/loadorder.txt" "$APPDATA_EXTERNAL/loadorder.txt"
     fi
-    rm -f "$APPDATA_EXTERNAL_1/Plugins.txt"
-    ln -s "$APPDATA_VORTEX/plugins.txt" "$APPDATA_EXTERNAL_1/plugins.txt"
+    rm -f "$APPDATA_EXTERNAL/Plugins.txt"
+    ln -s "$APPDATA_VORTEX/plugins.txt" "$APPDATA_EXTERNAL/Plugins.txt"
 fi
 
-if [ -d "$APPDATA_EXTERNAL_2" ] && [ -d "$APPDATA_VORTEX" ]; then
-    mkdir -p "$APPDATA_EXTERNAL_2" || true
-    if [ ! -L "$APPDATA_EXTERNAL_2/loadorder.txt" ]; then
-        ln -s "$APPDATA_VORTEX/loadorder.txt" "$APPDATA_EXTERNAL_2/loadorder.txt"
-    fi
-    rm -f "$APPDATA_EXTERNAL_2/Plugins.txt"
-    ln -s "$APPDATA_VORTEX/plugins.txt" "$APPDATA_EXTERNAL_2/plugins.txt"
-fi
-
-# Add registry keys based on found path
-
-USER_REG_PATH=""
-if [ -d "$SKYRIM_INTERNAL" ]; then
-    USER_REG_PATH="/home/deck/.steam/steam/steamapps/compatdata/489830/pfx/user.reg"
-elif [ -d "$SKYRIM_EXTERNAL_1" ]; then
-    USER_REG_PATH="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/user.reg"
-elif [ -d "$SKYRIM_EXTERNAL_2" ]; then
-    USER_REG_PATH="/run/media/mmcblk0p1/SteamLibrary/steamapps/compatdata/489830/pfx/user.reg"
-fi
-
+# Add registry keys
+USER_REG_PATH_INTERNAL="/home/deck/.steam/steam/steamapps/compatdata/489830/pfx/user.reg"
+USER_REG_PATH_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/user.reg"
 TIMESTAMP=$(date +%s)
 
-if [[ $USER_REG_PATH ]]; then 
-    echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >>"$USER_REG_PATH"
+if [ -f "$USER_REG_PATH_INTERNAL" ] && [ -d "$HOME/.steam/steam/steamapps/compatdata/489830/pfx/" ]; then
+    echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >> "$USER_REG_PATH_INTERNAL"
+    echo "\"TitleExe\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >> "$USER_REG_PATH_INTERNAL"
+    echo "\"TitlePath\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >> "$USER_REG_PATH_INTERNAL"
+fi
 
-    # Add entries for all possible paths based on which one was found.
-    
-    echo "\"TitleExe\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >>"$USER_REG_PATH"
-
-    echo "\"TitlePath\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >>"$USER_REG_PATH"
-
-    
-    # For external paths, add corresponding entries as well.
-    
-    if [[ $USER_REG_PATH == *"$SKYRIM_EXTERNAL_1"* ]]; then 
-        echo "\"TitleExe\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >>"$USER_REG_PATH"
-        echo "\"TitlePath\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >>"$USER_REG_PATH"
-
-    elif [[ $USER_REG_PATH == *"$SKYRIM_EXTERNAL_2"* ]]; then 
-        echo "\"TitleExe\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\SteamLibrary\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >>"$USER_REG_PATH"
-        echo "\"TitlePath\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\SteamLibrary\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >>"$USER_REG_PATH"
-
-    fi 
-fi 
+if [ -f "$USER_REG_PATH_EXTERNAL" ] && [ -d "/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/" ]; then
+    echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >> "$USER_REG_PATH_EXTERNAL"
+    echo "\"TitleExe\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >> "$USER_REG_PATH_EXTERNAL"
+    echo "\"TitlePath\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >> "$USER_REG_PATH_EXTERNAL"
+fi
 
 # Restart Steam
 echo "Restarting Steam. Please wait..."
-steam -shutdown 
-while pgrep -x "steam"> /dev/null; do sleep  1; done 
-nohup steam > /dev/null  2>&  1 & 
+steam -shutdown
+while pgrep -x "steam" > /dev/null; do sleep 1; done
+nohup steam > /dev/null 2>&1 &
 
 echo "Success! This window will close in 5 seconds....."
-sleep 5 
+sleep 5

@@ -26,8 +26,6 @@ if [ -f "$HOME/.steam/steam/steamapps/common/SteamLinuxRuntime_sniper/run" ]; th
     STEAM_RUNTIME_PATH="$HOME/.steam/steam/steamapps/common/SteamLinuxRuntime_sniper"
 elif [ -f "/run/media/mmcblk0p1/steamapps/common/SteamLinuxRuntime_sniper/run" ]; then
     STEAM_RUNTIME_PATH="/run/media/mmcblk0p1/steamapps/common/SteamLinuxRuntime_sniper"
-elif [ -f "/run/media/mmcblk0p1/SteamLibrary/steamapps/common/SteamLinuxRuntime_sniper/run" ]; then
-    STEAM_RUNTIME_PATH="/run/media/mmcblk0p1/SteamLibrary/steamapps/common/SteamLinuxRuntime_sniper"
 else
     echo "SteamLinuxRuntime Sniper not found!"
     sleep 3
@@ -50,10 +48,6 @@ fi
 
 if [ -d "/run/media/mmcblk0p1/steamapps/common/" ]; then
     ln -s "/run/media/mmcblk0p1/steamapps/common/" k: || true
-fi
-
-if [ -d "/run/media/mmcblk0p1/SteamLibrary/steamapps/common/" ]; then
-    ln -s "/run/media/mmcblk0p1/SteamLibrary/steamapps/common/" k: || true
 fi
 
 update-desktop-database || true
@@ -84,16 +78,13 @@ done
 
 # Set the Proton version for the game
 INTERNAL_PATH="/home/deck/.steam/steam/steamapps/compatdata/489830/"
-EXTERNAL_PATH_1="/run/media/mmcblk0p1/steamapps/compatdata/489830/"
-EXTERNAL_PATH_2="/run/media/mmcblk0p1/SteamLibrary/steamapps/compatdata/489830/"
+EXTERNAL_PATH="/run/media/mmcblk0p1/steamapps/compatdata/489830/"
 
 echo "Setting Proton version for the game..."
 if [ -d "$INTERNAL_PATH" ]; then
     echo "$PROTON_BUILD" > "${INTERNAL_PATH}version"
-elif [ -d "$EXTERNAL_PATH_1" ]; then
-    echo "$PROTON_BUILD" > "${EXTERNAL_PATH_1}version"
-elif [ -d "$EXTERNAL_PATH_2" ]; then
-    echo "$PROTON_BUILD" > "${EXTERNAL_PATH_2}version"
+elif [ -d "$EXTERNAL_PATH" ]; then
+    echo "$PROTON_BUILD" > "${EXTERNAL_PATH}version"
 else
     echo "The game is not installed in either the internal or external location."
 fi
@@ -109,8 +100,7 @@ mkdir -p "$BACKUP_DIR"
 
 # Backup files from both Skyrim directories
 SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/Data/"
-SKYRIM_EXTERNAL_1="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/Data/"
-SKYRIM_EXTERNAL_2="/run/media/mmcblk0p1/SteamLibrary/steamapps/common/Skyrim Special Edition/Data/
+SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/Data/"
 
 if [ -d "$SKYRIM_INTERNAL" ]; then
     echo "Backing up files from $SKYRIM_INTERNAL to $BACKUP_DIR"
@@ -121,20 +111,11 @@ if [ -d "$SKYRIM_INTERNAL" ]; then
     done
 fi
 
-if [ -d "$SKYRIM_EXTERNAL_1" ]; then
-    echo "Backing up files from $SKYRIM_EXTERNAL_1 to $BACKUP_DIR"
+if [ -d "$SKYRIM_EXTERNAL" ]; then
+    echo "Backing up files from $SKYRIM_EXTERNAL to $BACKUP_DIR"
     for FILE in "${FILES_TO_BACKUP[@]}"; do
-        if [ -f "${SKYRIM_EXTERNAL_1}${FILE}" ]; then
-            mv "${SKYRIM_EXTERNAL_1}${FILE}" "$BACKUP_DIR"
-        fi
-    done
-fi
-
-if [ -d "$SKYRIM_EXTERNAL_2" ]; then
-    echo "Backing up files from $SKYRIM_EXTERNAL_2 to $BACKUP_DIR"
-    for FILE in "${FILES_TO_BACKUP[@]}"; do
-        if [ -f "${SKYRIM_EXTERNAL_2}${FILE}" ]; then
-            mv "${SKYRIM_EXTERNAL_2}${FILE}" "$BACKUP_DIR"
+        if [ -f "${SKYRIM_EXTERNAL}${FILE}" ]; then
+            mv "${SKYRIM_EXTERNAL}${FILE}" "$BACKUP_DIR"
         fi
     done
 fi
@@ -146,4 +127,4 @@ while pgrep -x "steam" > /dev/null; do sleep 1; done
 nohup steam > /dev/null 2>&1 &
 
 echo "Success! Exiting in 5 seconds....."
-sleep 5 
+sleep 5
