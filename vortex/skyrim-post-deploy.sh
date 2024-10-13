@@ -115,11 +115,16 @@ TIMESTAMP=$(date +%s)
 if [[ $USER_REG_PATH ]]; then 
     echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >>"$USER_REG_PATH"
 
-    if [[ $USER_REG_PATH == *"$SKYRIM_INTERNAL"* ]]; then 
-        echo "\"TitleExe\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >>"$USER_REG_PATH"
-        echo "\"TitlePath\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >>"$USER_REG_PATH"
+    # Add entries for all possible paths based on which one was found.
+    
+    echo "\"TitleExe\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >>"$USER_REG_PATH"
 
-    elif [[ $USER_REG_PATH == *"$SKYRIM_EXTERNAL_1"* ]]; then 
+    echo "\"TitlePath\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >>"$USER_REG_PATH"
+
+    
+    # For external paths, add corresponding entries as well.
+    
+    if [[ $USER_REG_PATH == *"$SKYRIM_EXTERNAL_1"* ]]; then 
         echo "\"TitleExe\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >>"$USER_REG_PATH"
         echo "\"TitlePath\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >>"$USER_REG_PATH"
 
