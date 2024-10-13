@@ -99,36 +99,42 @@ if [ -d "$APPDATA_EXTERNAL_2" ] && [ -d "$APPDATA_VORTEX" ]; then
     ln -s "$APPDATA_VORTEX/plugins.txt" "$APPDATA_EXTERNAL_2/plugins.txt"
 fi
 
-# Add registry keys
-USER_REG_PATH_INTERNAL="/home/deck/.steam/steam/steamapps/compatdata/489830/pfx/user.reg"
-USER_REG_PATH_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/user.reg"
-USER_REG_PATH_EXTERNAL_2="/run/media/mmcblk0p1/SteamLibrary/steamapps/compatdata/489830/pfx/user.reg"
+# Add registry keys based on found path
+
+USER_REG_PATH=""
+if [ -d "$SKYRIM_INTERNAL" ]; then
+    USER_REG_PATH="/home/deck/.steam/steam/steamapps/compatdata/489830/pfx/user.reg"
+elif [ -d "$SKYRIM_EXTERNAL_1" ]; then
+    USER_REG_PATH="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/user.reg"
+elif [ -d "$SKYRIM_EXTERNAL_2" ]; then
+    USER_REG_PATH="/run/media/mmcblk0p1/SteamLibrary/steamapps/compatdata/489830/pfx/user.reg"
+fi
 
 TIMESTAMP=$(date +%s)
 
-if [ -f "$USER_REG_PATH_INTERNAL" ] && [ -d "$(dirname $USER_REG_PATH_INTERNAL)" ]; then
-    echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >> "$USER_REG_PATH_INTERNAL"
-    echo "\"TitleExe\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >> "$USER_REG_PATH_INTERNAL"
-    echo "\"TitlePath\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >> "$USER_REG_PATH_INTERNAL"
-fi
+if [[ $USER_REG_PATH ]]; then 
+    echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >>"$USER_REG_PATH"
 
-if [ -f "$USER_REG_PATH_EXTERNAL" ] && [ -d "$(dirname $USER_REG_PATH_EXTERNAL)" ]; then
-    echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >> "$USER_REG_PATH_EXTERNAL"
-    echo "\"TitleExe\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >> "$USER_REG_PATH_EXTERNAL"
-    echo "\"TitlePath\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >> "$USER_REG_PATH_EXTERNAL"
-fi
+    if [[ $USER_REG_PATH == *"$SKYRIM_INTERNAL"* ]]; then 
+        echo "\"TitleExe\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >>"$USER_REG_PATH"
+        echo "\"TitlePath\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >>"$USER_REG_PATH"
 
-if [ -f "$USER_REG_PATH_EXTERNAL_2" ] && [ -d "$(dirname $USER_REG_PATH_EXTERNAL_2)" ]; then
-    echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >> "$USER_REG_PATH_EXTERNAL_2"
-    echo "\"TitleExe\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\SteamLibrary\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >> "$USER_REG_PATH_EXTERNAL_2"
-    echo "\"TitlePath\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\SteamLibrary\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >> "$USER_REG_PATH_EXTERNAL_2"
-fi
+    elif [[ $USER_REG_PATH == *"$SKYRIM_EXTERNAL_1"* ]]; then 
+        echo "\"TitleExe\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >>"$USER_REG_PATH"
+        echo "\"TitlePath\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >>"$USER_REG_PATH"
+
+    elif [[ $USER_REG_PATH == *"$SKYRIM_EXTERNAL_2"* ]]; then 
+        echo "\"TitleExe\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\SteamLibrary\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >>"$USER_REG_PATH"
+        echo "\"TitlePath\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\SteamLibrary\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >>"$USER_REG_PATH"
+
+    fi 
+fi 
 
 # Restart Steam
 echo "Restarting Steam. Please wait..."
-steam -shutdown
-while pgrep -x "steam" > /dev/null; do sleep 1; done
-nohup steam > /dev/null 2>&1 &
+steam -shutdown 
+while pgrep -x "steam"> /dev/null; do sleep  1; done 
+nohup steam > /dev/null  2>&  1 & 
 
 echo "Success! This window will close in 5 seconds....."
 sleep 5 
