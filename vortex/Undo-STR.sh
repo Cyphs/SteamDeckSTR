@@ -2,10 +2,12 @@
 set -eo pipefail
 
 SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/"
-SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/"
+SKYRIM_EXTERNAL_1="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/"
+SKYRIM_EXTERNAL_2="/run/media/mmcblk0p1/SteamLibrary/steamapps/common/Skyrim Special Edition/"
 
 APPDATA_INTERNAL="$HOME/.local/share/Steam/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
-APPDATA_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
+APPDATA_EXTERNAL_1="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
+APPDATA_EXTERNAL_2="/run/media/mmcblk0p1/SteamLibrary/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
 
 CC_BACKUP="$HOME/.Cyphs/SteamDeckSTR-master/CC Backup/"
 
@@ -43,35 +45,42 @@ restore_file() {
   fi
 }
 
-
 # Delete files and directories from both Skyrim directories
 for FILE_OR_DIR in "${FILES_AND_DIRS[@]}"; do
     delete_file_or_dir "${SKYRIM_INTERNAL}${FILE_OR_DIR}"
-    delete_file_or_dir "${SKYRIM_EXTERNAL}${FILE_OR_DIR}"
+    delete_file_or_dir "${SKYRIM_EXTERNAL_1}${FILE_OR_DIR}"
+    delete_file_or_dir "${SKYRIM_EXTERNAL_2}${FILE_OR_DIR}"
 done
 
 # Delete files that start with crash_UTC in both Skyrim directories
 for FILE in "${SKYRIM_INTERNAL}"crash_UTC*; do
     delete_file_or_dir "$FILE"
 done
-for FILE in "${SKYRIM_EXTERNAL}"crash_UTC*; do
+for FILE in "${SKYRIM_EXTERNAL_1}"crash_UTC*; do
+    delete_file_or_dir "$FILE"
+done
+for FILE in "${SKYRIM_EXTERNAL_2}"crash_UTC*; do
     delete_file_or_dir "$FILE"
 done
 
 # Delete loadorder.txt and Plugins.txt symlinks from both AppData directories
 delete_file_or_dir "${APPDATA_INTERNAL}loadorder.txt"
 delete_file_or_dir "${APPDATA_INTERNAL}Plugins.txt"
-delete_file_or_dir "${APPDATA_EXTERNAL}loadorder.txt"
-delete_file_or_dir "${APPDATA_EXTERNAL}Plugins.txt"
+delete_file_or_dir "${APPDATA_EXTERNAL_1}loadorder.txt"
+delete_file_or_dir "${APPDATA_EXTERNAL_1}Plugins.txt"
+delete_file_or_dir "${APPDATA_EXTERNAL_2}loadorder.txt"
+delete_file_or_dir "${APPDATA_EXTERNAL_2}Plugins.txt"
 
 # Rename _SkyrimSELauncher.exe back to SkyrimSELauncher.exe in both Skyrim directories
 rename_launcher "$SKYRIM_INTERNAL"
-rename_launcher "$SKYRIM_EXTERNAL"
+rename_launcher "$SKYRIM_EXTERNAL_1"
+rename_launcher "$SKYRIM_EXTERNAL_2"
 
 # Restore files from CC Backup in both Skyrim directories
 for FILE in "${FILES_TO_RESTORE[@]}"; do
     restore_file "$SKYRIM_INTERNAL" "$FILE"
-    restore_file "$SKYRIM_EXTERNAL" "$FILE"
+    restore_file "$SKYRIM_EXTERNAL_1" "$FILE"
+    restore_file "$SKYRIM_EXTERNAL_2" "$FILE"
 done
 
 echo "Undo script completed. This window will close in 5 seconds....."
