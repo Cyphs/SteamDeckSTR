@@ -26,6 +26,8 @@ if [ -f "$HOME/.steam/steam/steamapps/common/SteamLinuxRuntime_sniper/run" ]; th
     STEAM_RUNTIME_PATH="$HOME/.steam/steam/steamapps/common/SteamLinuxRuntime_sniper"
 elif [ -f "/run/media/mmcblk0p1/steamapps/common/SteamLinuxRuntime_sniper/run" ]; then
     STEAM_RUNTIME_PATH="/run/media/mmcblk0p1/steamapps/common/SteamLinuxRuntime_sniper"
+elif [ -f "/run/media/mmcblk0p1/SteamLibrary/steamapps/common/SteamLinuxRuntime_sniper/run" ]; then
+    STEAM_RUNTIME_PATH="/run/media/mmcblk0p1/SteamLibrary/steamapps/common/SteamLinuxRuntime_sniper"
 else
     echo "SteamLinuxRuntime Sniper not found!"
     sleep 3
@@ -48,6 +50,8 @@ fi
 
 if [ -d "/run/media/mmcblk0p1/steamapps/common/" ]; then
     ln -s "/run/media/mmcblk0p1/steamapps/common/" k: || true
+elif [ -d "/run/media/mmcblk0p1/SteamLibrary/steamapps/common/" ]; then
+    ln -s "/run/media/mmcblk0p1/SteamLibrary/steamapps/common/" k: || true
 fi
 
 update-desktop-database || true
@@ -63,6 +67,9 @@ mkdir -p /run/media/mmcblk0p1/vortex-downloads || true
 PROTON_DIR="/home/deck/.vortex-linux/proton-builds/"
 STEAM_DIR="/home/deck/.steam/root/compatibilitytools.d/"
 
+# Create the Proton directory if it doesn't exist
+mkdir -p "$STEAM_DIR"
+
 # Create a symlink for each Proton version
 for dir in $PROTON_DIR/GE-Proton*; do
     if [ -d "$dir" ]; then
@@ -76,14 +83,17 @@ done
 # Set the Proton version for the game
 INTERNAL_PATH="/home/deck/.steam/steam/steamapps/compatdata/489830/"
 EXTERNAL_PATH="/run/media/mmcblk0p1/steamapps/compatdata/489830/"
+EXTERNAL_ALT_PATH="/run/media/mmcblk0p1/SteamLibrary/steamapps/compatdata/489830/"
 
 echo "Setting Proton version for the game..."
 if [ -d "$INTERNAL_PATH" ]; then
     echo "$PROTON_BUILD" > "${INTERNAL_PATH}version"
 elif [ -d "$EXTERNAL_PATH" ]; then
     echo "$PROTON_BUILD" > "${EXTERNAL_PATH}version"
+elif [ -d "$EXTERNAL_ALT_PATH" ]; then
+    echo "$PROTON_BUILD" > "${EXTERNAL_ALT_PATH}version"
 else
-    echo "The game is not installed in either the internal or external location."
+    echo "The game is not installed in any of the expected locations."
 fi
 
 # Define the files to backup
@@ -95,27 +105,21 @@ BACKUP_DIR="$HOME/.Cyphs/SteamDeckSTR-tests/CC Backup/"
 # Create the backup directory if it doesn't exist
 mkdir -p "$BACKUP_DIR"
 
-# Backup files from both Skyrim directories
+# Backup files from all possible Skyrim directories
 SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/Data/"
 SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/Data/"
+SKYRIM_EXTERNAL_ALT="/run/media/mmcblk0p1/SteamLibrary/steamapps/common/Skyrim Special Edition/Data/"
 
-if [ -d "$SKYRIM_INTERNAL" ]; then
-    echo "Backing up files from $SKYRIM_INTERNAL to $BACKUP_DIR"
-    for FILE in "${FILES_TO_BACKUP[@]}"; do
-        if [ -f "${SKYRIM_INTERNAL}${FILE}" ]; then
-            mv "${SKYRIM_INTERNAL}${FILE}" "$BACKUP_DIR"
-        fi
-    done
-fi
-
-if [ -d "$SKYRIM_EXTERNAL" ]; then
-    echo "Backing up files from $SKYRIM_EXTERNAL to $BACKUP_DIR"
-    for FILE in "${FILES_TO_BACKUP[@]}"; do
-        if [ -f "${SKYRIM_EXTERNAL}${FILE}" ]; then
-            mv "${SKYRIM_EXTERNAL}${FILE}" "$BACKUP_DIR"
-        fi
-    done
-fi
+for SKYRIM_DIR in "$SKYRIM_INTERNAL" "$SKYRIM_EXTERNAL" "$SKYRIM_EXTERNAL_ALT"; do
+    if [ -d "$SKYRIM_DIR" ]; then
+        echo "Backing up files from $SKYRIM_DIR to $BACKUP_DIR"
+        for FILE in "${FILES_TO_BACKUP[@]}"; do
+            if [ -f "${SKYRIM_DIR}${FILE}" ]; then
+                mv "${SKYRIM_DIR}${FILE}" "$BACKUP_DIR"
+            fi
+        done
+    fi
+done
 
 # Restart Steam
 echo "Restarting Steam. Please wait..."
