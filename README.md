@@ -167,9 +167,10 @@ rm -rf ~/.local/share/applications/vortex.*
 # Manually delete desktop icons
 ```
 
-Optionally, to also remove the Proton builds and runtime that umu-launcher downloaded:
+Optionally, to also remove the mod staging folder Vortex made next to the game, and the Proton builds and runtime that were downloaded:
 
 ```bash
+rm -rf ~/.steam/steam/steamapps/common/"Vortex Mods"
 rm -rf ~/.steam/root/compatibilitytools.d/GE-Proton10-34/
 rm -rf ~/.steam/root/compatibilitytools.d/UMU-Proton-*/
 rm -rf ~/.local/share/umu/
