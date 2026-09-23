@@ -63,7 +63,7 @@ This will automatically:
 
 ### Already installed SteamDeckSTR before?
 
-Double click **Update SteamDeckSTR** on the desktop. It switches Vortex over to umu-launcher and installs GE-Proton10-34, keeping your Vortex mods and settings. Then set Skyrim Special Edition to GE-Proton10-34 in Steam (see below, Update SteamDeckSTR doesn't select it for you), update Skyrim Together Reborn and Address Library in Vortex, and run STR Post-Deploy again.
+Double click **Update SteamDeckSTR** on the desktop. It upgrades Vortex to 1.15.2 and switches it over to umu-launcher, installs GE-Proton10-34 and selects it for Skyrim Special Edition in Steam, keeping your Vortex mods and settings. Steam will restart. Then update Skyrim Together Reborn and Address Library in Vortex, and run STR Post-Deploy again.
 
 ## Generate the Game Data
 
