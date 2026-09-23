@@ -10,7 +10,7 @@ SteamDeckSTR attempts to facilitate the install process specific to playing [Sky
 
 Mod Organizer 2 is my mod manager of choice on Windows, but Vortex seems more straightforward for running STR on the Deck and might be more user-friendly.
 
-Supports only the **latest Steam version of Skyrim Special Edition** (1.7.104) and Skyrim Together Reborn 1.8.1 or newer currently.
+Supports only the **latest Steam version of Skyrim Special Edition** (1.7.104) and the latest Skyrim Together Reborn (1.8.2) currently.
 
 **Important Note:** Skyrim Together only provides support for Windows on their official social media spaces (Discord, Reddit, etc.) If you have issues using this, do not ask for support there. You can [submit an issue here](https://github.com/Cyphs/SteamDeckSTR/issues/new/choose) or message me on Discord: internalerrorx
 
