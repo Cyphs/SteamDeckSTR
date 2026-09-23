@@ -10,17 +10,17 @@ SteamDeckSTR attempts to facilitate the install process specific to playing [Sky
 
 Mod Organizer 2 is my mod manager of choice on Windows, but Vortex seems more straightforward for running STR on the Deck and might be more user-friendly.
 
-Supports only the **latest Steam version of Skyrim Special Edition** (1.6.1170) currently. Support might be added for the GOG version later. MO2 support hopefully soon.
+Supports only the **latest Steam version of Skyrim Special Edition** (1.7.104) and Skyrim Together Reborn 1.8.1 or newer currently. Support might be added for the GOG version later. MO2 support hopefully soon.
 
 **Important Note:** Skyrim Together only provides support for Windows on their official social media spaces (Discord, Reddit, etc.) If you have issues using this, do not ask for support there. You can [submit an issue here](https://github.com/Cyphs/SteamDeckSTR/issues/new/choose) or message me on Discord: internalerrorx
 
 # Install
 
-These scripts assume that the game is in the default location on either the Internal storage (recommended) or an SD card. For now, please leave it as default. This might become more interactive and configurable for other locations in the future.
+The scripts find Skyrim Special Edition through Steam's own library list, so it can be on the Internal storage (recommended) or an SD card, including a SteamLibrary folder added in Desktop mode.
 
 * Before continuing, back up your Skyrim saves (just in case anything goes wrong), make sure you've read through the official STR [Wiki](https://wiki.tiltedphoques.com/tilted-online/general-information/faq) and the [Playguide](https://wiki.tiltedphoques.com/tilted-online/general-information/playguide).
 
-* It's recommended to start with a fresh installation, so uninstall the game if currently installed first. If you own the Anniversary Upgrade DLC, make sure to [disable it under the DLC tab](https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/tests/files/image.gif) in the game's Properties on Steam before installing. It is recommended to use the Internal drive for guaranteed better performance with multiplayer; and because SD card setups are not configured properly for this script yet. If you have other Creations, be sure to [uninstall them](https://help.bethesda.net/#en/answer/36378) as well.
+* It's recommended to start with a fresh installation, so uninstall the game if currently installed first. If you own the Anniversary Upgrade DLC, make sure to [disable it under the DLC tab](https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/tests/files/image.gif) in the game's Properties on Steam before installing. It is recommended to use the Internal drive for guaranteed better performance with multiplayer. If you have other Creations, be sure to [uninstall them](https://help.bethesda.net/#en/answer/36378) as well.
 
 * After reinstalling Skyrim Special Edition from Steam, **don't run it yet**. Failing to follow these steps exactly as written may result in bugs and crashes during your playthrough!
 
@@ -46,21 +46,28 @@ After installing the SteamDeckSTR scripts, you should have a shortcut on the des
 
 This will automatically:
 
-1. Install SteamLinuxRuntime Sniper
-2. Install [pikdum/vortex-linux](https://github.com/pikdum/vortex-linux)
-3. Use ./vortex-linux to set up Vortex
+1. Install [umu-launcher](https://github.com/Open-Wine-Components/umu-launcher), which runs Vortex with its own Proton (UMU-Proton)
+2. Install GE-Proton10-34 and select it for Skyrim Special Edition in Steam (GE-Proton 11 closes Skyrim Together Reborn right after launch)
+3. Install Vortex 1.15.2
 4. Add an 'STR Post-Deploy' shortcut to desktop
    * This will set up various things for STR and mods to run correctly when ran through Steam
-5. Map J: to Internal games ~~or K: to SD Card games~~ in Vortex
+5. Map J: to Internal games, and K: to the SD card library if Skyrim is installed there, in Vortex
    * E: Is the SD Card root
-6. [Delete all included Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) (Survival, Fishing, etc.) to reduce bugs and crashes with STR
+6. Set up Vortex for Skyrim Special Edition: game folder, Steam as the game store, staging folder on the same drive, Hardlink deployment, new plugins enabled, and no automatic updates
+7. [Delete all included Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) (Survival, Fishing, etc.) to reduce bugs and crashes with STR
    * They'll be backed up to `/home/deck/.Cyphs/SteamDeckSTR-master/CC Backup/` in case you need them again, but can also be restored by verifying game files on Steam.
 
 **This may take a few minutes! Steam will automatically restart when done if it completed properly.**
 
+**Important:** Newer Vortex versions (1.16 and up) don't work well on the Steam Deck yet, so Install Vortex turns off automatic updates. Leave Settings > Vortex > Update on **No automatic updates** so it stays on 1.15.2.
+
+### Already installed SteamDeckSTR before?
+
+Double click **Update SteamDeckSTR** on the desktop. It switches Vortex over to umu-launcher and installs GE-Proton10-34, keeping your Vortex mods and settings. Then set Skyrim Special Edition to GE-Proton10-34 in Steam (see below, Update SteamDeckSTR doesn't select it for you), update Skyrim Together Reborn and Address Library in Vortex, and run STR Post-Deploy again.
+
 ## Generate the Game Data
 
-* After installing Vortex, **don't run it yet**. In the Steam Library: right-click on Skyrim Special Edition, go to Properties > Compatibility > Force it to use GE-Proton8-27. It may be auto-selected for you.
+* After installing Vortex, **don't run it yet**. In the Steam Library: right-click on Skyrim Special Edition, go to Properties > Compatibility and make sure Force the use of a specific Steam Play compatibility tool is checked with GE-Proton10-34. Install Vortex selects it for you. If it isn't, pick GE-Proton10-34 yourself (it's at the bottom of the list).
 
 * Run the game normally through Steam so it can generate all necessary data for it to work correctly and to synchronize your save data from Steam cloud.  
 
@@ -72,8 +79,9 @@ This will automatically:
 
 * Launch Vortex then find/search Skyrim Special Edition in Games to Manage it.
 
-* You'll need to manually set the location, use the J: drive for Internal storage games.
-  * J: is internal storage games, K: is SD Card games. It is highly recommended to use the internal storage. (SD card unsupported at this time due to errors with the script.)
+* Install Vortex already set the game folder, staging folder and Hardlink deployment for you, so Skyrim Special Edition switches to managed right away.
+* If Vortex still asks for the game folder, set it manually: use the J: drive for Internal storage games or the K: drive for SD card games. It is highly recommended to use the internal storage.
+  * Vortex then asks you to Choose a Game Store. Select **Steam** and press **Select**.
 * Vortex may pop up some warnings about: Staging location & Deployment Method
    * When it does:
       * Walk through their fixes (Note: Skyrim Script Extender (SKSE64) is NOT required nor recommended; you may ignore that one!)
@@ -83,7 +91,7 @@ This will automatically:
    * If it doesn't:
       * Go to Settings -> Mods
       * Set the **Base Path** to:
-        * ~~`K:\vortex_mods\{GAME}` if your games are on the SD Card~~
+        * `K:\vortex_mods\{GAME}` if your games are on the SD Card
         * `J:\vortex_mods\{GAME}` if your games are on the internal drive
       * Press **Apply**
       * **Deployment Method** will now allow you to select `Hardlink deployment`
@@ -107,11 +115,11 @@ x-scheme-handler/nxm-protocol=vortex.desktop
 
 ## Install the STR Requirements
 
-After installing [Skyrim Together Reborn](https://www.nexusmods.com/skyrimspecialedition/mods/69993?tab=files), [Address Library (1.6.X)](https://www.nexusmods.com/skyrimspecialedition/mods/32444?tab=files), and optionally other mods* in Vortex **then running the STR Post-Deploy script on the Desktop**, you can start the game normally through Game Mode. SkyrimTogether.exe will replace SkyrimSELauncher.exe and SkyrimSELauncher.exe will be renamed to _SkyrimSELauncher.exe in case you wish to Undo this later.
-Make sure you have downloaded the latest Address Library **1.6.X**, NOT 1.5.X. It's the second file on the download page for Address Library. SKSE is not required for this, despite the name.
+After installing [Skyrim Together Reborn](https://www.nexusmods.com/skyrimspecialedition/mods/69993?tab=files), [Address Library](https://www.nexusmods.com/skyrimspecialedition/mods/32444?tab=files), and optionally other mods* in Vortex **then running the STR Post-Deploy script on the Desktop**, you can start the game normally through Game Mode. SkyrimTogether.exe will replace SkyrimSELauncher.exe and SkyrimSELauncher.exe will be renamed to _SkyrimSELauncher.exe in case you wish to Undo this later.
+Make sure you have downloaded the latest **All in One** file of Address Library (it covers 1.7.104). It's the main file on the download page for Address Library. SKSE is not required for this, despite the name.
 
 *Other mods are not recommended for stability!
-  * If you want to use Skyrim Script Extender (SKSE), just extract it to the game folder root, in the same place where SkyrimSE.exe usually is. Do not use it to start the game. Skyrim Together Reborn should automatically detect and load it. Please be aware that SKSE can cause bugs and possibly increase the chance of crashes. Recommended that you manually download and extract it from [their website here](https://skse.silverlock.org). Make sure you get **Current Anniversary Edition build** for the latest version of the game on Steam, even if you have just Skyrim Special Edition (look at the game version, 1.6.X, not the name!)
+  * If you want to use Skyrim Script Extender (SKSE), just extract it to the game folder root, in the same place where SkyrimSE.exe usually is. Do not use it to start the game. Skyrim Together Reborn should automatically detect and load it. Please be aware that SKSE can cause bugs and possibly increase the chance of crashes. Recommended that you manually download and extract it from [their website here](https://skse.silverlock.org). Make sure you get **Current Anniversary Edition build** for the latest version of the game on Steam, even if you have just Skyrim Special Edition (look at the game version, 1.7.X, not the name!)
 
 ### STR Post-Deploy desktop shortcut
 
@@ -136,7 +144,7 @@ It automates things like:
 
 ## Currently Known Issues
 
-* [This is not configured properly when installed to an SD card.](https://github.com/Cyphs/SteamDeckSTR/issues/1) Install the game on internal storage until resolved at a later time.
+* [SD card installs](https://github.com/Cyphs/SteamDeckSTR/issues/1) are now detected through Steam's library list, but they're less tested than the internal storage. If something doesn't work on an SD card, please report it in that issue.
 
 * Using the Steam virtual keyboard in Gaming Mode then closing it crashes the game. This may prevent you from using the text chat without an external keyboard connected. You might also need an external keyboard or remote desktop program at least once to enter a private server's IP address. It should be saved in the UI the next time it's launched.
   * Apparently, this happens with the game on the Steam Deck in general, not just with Skyrim Together Reborn. I've found a temporary solution until there's a real fix. Each time you play, open the Creations menu before loading your save and press LB to search. Close it, then load your save. The virtual keyboard won't crash now until next restart. Make sure `SteamDeck=0 %command%` is **removed** from Steam Launch Options or this won't work! Video: https://youtu.be/Km5ZJ2fAzC8
@@ -157,4 +165,12 @@ rm -rf ~/.Cyphs/
 rm -rf ~/.vortex-linux/
 rm -rf ~/.local/share/applications/vortex.*
 # Manually delete desktop icons
+```
+
+Optionally, to also remove the Proton builds and runtime that umu-launcher downloaded:
+
+```bash
+rm -rf ~/.steam/root/compatibilitytools.d/GE-Proton10-34/
+rm -rf ~/.steam/root/compatibilitytools.d/UMU-Proton-*/
+rm -rf ~/.local/share/umu/
 ```

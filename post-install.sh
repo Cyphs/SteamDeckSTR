@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
+chmod +x ~/.Cyphs/SteamDeckSTR-master/vortex/*.sh
+
 ln -sf ~/.Cyphs/SteamDeckSTR-master/update.desktop ~/Desktop/Cyphs-update.desktop
 
 if [ ! -f "$HOME/.local/share/applications/vortex.desktop" ]; then
@@ -11,28 +13,21 @@ else
     ln -sf ~/.Cyphs/SteamDeckSTR-master/vortex/skyrim-post-deploy.desktop ~/Desktop/
     ln -sf ~/.Cyphs/SteamDeckSTR-master/vortex/Undo-STR.desktop ~/Desktop/
 
-    VORTEX_LINUX="v1.3.4"
-    PROTON_BUILD="GE-Proton8-27"
+    # vortex-linux is no longer used, Vortex now runs through umu-launcher
+    rm -f ~/.Cyphs/SteamDeckSTR-master/vortex/vortex-linux
 
-    PROTON_URL="https://github.com/GloriousEggroll/proton-ge-custom/releases/download/$PROTON_BUILD/$PROTON_BUILD.tar.gz"
+    echo "Updating umu-launcher..."
+    ~/.Cyphs/SteamDeckSTR-master/vortex/install-umu.sh
 
-    echo "Updating vortex-linux..."
-    pushd ~/.Cyphs/SteamDeckSTR-master/vortex/
-    rm -rf vortex-linux || true
-    wget https://github.com/pikdum/vortex-linux/releases/download/$VORTEX_LINUX/vortex-linux
-    chmod +x vortex-linux
-    popd
+    echo "Updating GE-Proton..."
+    ~/.Cyphs/SteamDeckSTR-master/vortex/install-proton.sh
 
-    ~/.Cyphs/SteamDeckSTR-master/vortex/vortex-linux setupVortexDesktop
+    # Make sure the Vortex shortcut launches through umu-launcher
+    cp ~/.Cyphs/SteamDeckSTR-master/vortex/vortex.desktop ~/.local/share/applications/
+    ln -sf ~/.local/share/applications/vortex.desktop ~/Desktop/
+    update-desktop-database ~/.local/share/applications || true
 
-    if [ ! -d "$HOME/.vortex-linux/proton-builds/$PROTON_BUILD" ]; then
-        echo "Removing old Proton builds..."
-        rm -rf $HOME/.vortex-linux/proton-builds/*
-        echo "Upgrading Proton to $PROTON_BUILD..."
-        ~/.Cyphs/SteamDeckSTR-master/vortex/vortex-linux downloadProton "$PROTON_URL"
-        ~/.Cyphs/SteamDeckSTR-master/vortex/vortex-linux setProton "$PROTON_BUILD"
-    fi
+    # Let Vortex use the game's own INI files and saves
+    ~/.Cyphs/SteamDeckSTR-master/vortex/link-my-games.sh
 fi
-
-mkdir -p /run/media/mmcblk0p1/vortex-downloads || true
 

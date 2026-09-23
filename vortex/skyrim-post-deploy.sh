@@ -1,34 +1,27 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/"
-SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/"
-SKYRIM_TOGETHER_PATH_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/Data/SkyrimTogetherReborn"
-SKYRIM_TOGETHER_PATH_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/Data/SkyrimTogetherReborn"
+source ~/.Cyphs/SteamDeckSTR-master/vortex/skyrim-paths.sh
+
+if [ -z "$SKYRIM_LIBRARY" ]; then
+    echo "Skyrim Special Edition is not installed in any Steam library."
+    sleep 5
+    exit 1
+fi
+echo "Skyrim Special Edition found in $SKYRIM_LIBRARY"
 
 APPDATA_VORTEX="$HOME/.vortex-linux/compatdata/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition"
-APPDATA_INTERNAL="$HOME/.local/share/Steam/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
-APPDATA_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
 
 CC_BACKUP="$HOME/.Cyphs/SteamDeckSTR-master/CC Backup/"
 
 FILES_TO_BACKUP=("ccBGSSSE001-Fish.bsa" "ccBGSSSE001-Fish.esm" "ccBGSSSE025-AdvDSGS.bsa" "ccBGSSSE025-AdvDSGS.esm" "ccBGSSSE037-Curios.bsa" "ccBGSSSE037-Curios.esl" "ccQDRSSE001-SurvivalMode.bsa" "ccQDRSSE001-SurvivalMode.esl")
 
-# Function to remove and backup CC Content
-backup_file() {
-  if [ -f "${1}Data/${2}" ]; then
-      echo "CC content found, removing ${2} and saving to CC Backup"
-      mv "${1}Data/${2}" "${CC_BACKUP}/"
-  fi
-}
-
-# Backup files from both Skyrim directories
+# Remove and back up CC content
+mkdir -p "$CC_BACKUP"
 for FILE in "${FILES_TO_BACKUP[@]}"; do
-    if [ -d "$SKYRIM_INTERNAL" ]; then
-        backup_file "$SKYRIM_INTERNAL" "$FILE"
-    fi
-    if [ -d "$SKYRIM_EXTERNAL" ]; then
-        backup_file "$SKYRIM_EXTERNAL" "$FILE"
+    if [ -f "${SKYRIM_DIR}Data/${FILE}" ]; then
+        echo "CC content found, removing ${FILE} and saving to CC Backup"
+        mv "${SKYRIM_DIR}Data/${FILE}" "$CC_BACKUP"
     fi
 done
 
@@ -39,8 +32,9 @@ str_setup() {
         echo "Current directory: $(pwd)"
 
         echo "Renaming launcher (if needed)"
-        if [ ! -f "${1}_SkyrimSELauncher.exe" ]; then
-            mv "${1}SkyrimSELauncher.exe" "${1}_SkyrimSELauncher.exe" || echo "Launcher rename failed"
+        # A real launcher here means a fresh install or a game update put it back
+        if [ ! -L "${1}SkyrimSELauncher.exe" ]; then
+            mv -f "${1}SkyrimSELauncher.exe" "${1}_SkyrimSELauncher.exe" || echo "Launcher rename failed"
         fi
 
         echo "Symlinking SkyrimTogether.exe"
@@ -48,8 +42,13 @@ str_setup() {
             ln -s "${2}/SkyrimTogether.exe" "${1}SkyrimSELauncher.exe" || echo "Failed to create launcher symlink"
         fi
 
+        echo "Removing links to files older STR versions shipped"
+        find "$1" -path "${1}Data" -prune -o -xtype l -lname "*SkyrimTogetherReborn*" -print -exec rm -f {} \;
+
         echo "Symlinking mod content"
         cd "${2}"
+        # Recreate the folder layout first so empty folders (like resources) exist too
+        find . -mindepth 1 -type d -exec bash -c 'mkdir -p "$1${0#./}"' {} "$1" \;
         find . -type f -exec bash -c '
             src="$0"
             dest="$1${src#./}"  # Remove leading ./ from src, then concatenate with the destination path
@@ -61,45 +60,62 @@ str_setup() {
     fi
 }
 
-# Setup for both Skyrim directories
-str_setup "$SKYRIM_INTERNAL" "$SKYRIM_TOGETHER_PATH_INTERNAL"
-str_setup "$SKYRIM_EXTERNAL" "$SKYRIM_TOGETHER_PATH_EXTERNAL"
+str_setup "$SKYRIM_DIR" "${SKYRIM_DIR}Data/SkyrimTogetherReborn"
+
+# Let Vortex use the game's own INI files and saves
+~/.Cyphs/SteamDeckSTR-master/vortex/link-my-games.sh
+
+# Newer Vortex versions leave new plugins disabled, so make sure the Skyrim Together
+# Reborn plugins are enabled (Vortex picks this up from plugins.txt)
+if [ -f "$APPDATA_VORTEX/plugins.txt" ]; then
+    echo "Enabling Skyrim Together Reborn plugins"
+    python3 - "$APPDATA_VORTEX/plugins.txt" "${SKYRIM_DIR}Data" <<'EOF'
+import os
+import sys
+
+plugins_txt, data_dir = sys.argv[1], sys.argv[2]
+str_plugins = sorted(f for f in os.listdir(data_dir) if f.lower().startswith("skyrimtogether") and f.lower().endswith(".esp"))
+
+with open(plugins_txt, encoding="utf-8") as f:
+    lines = f.read().splitlines()
+
+for plugin in str_plugins:
+    for i, line in enumerate(lines):
+        if line.lstrip("*").strip().lower() == plugin.lower():
+            lines[i] = "*" + plugin
+            break
+    else:
+        lines.append("*" + plugin)
+
+with open(plugins_txt, "w", encoding="utf-8") as f:
+    f.write("\n".join(lines) + "\n")
+EOF
+fi
 
 # Configuration file handling
 echo "Symlinking loadorder.txt and Plugins.txt"
-if [ -d "$APPDATA_INTERNAL" ] && [ -d "$APPDATA_VORTEX" ]; then
-    mkdir -p "$APPDATA_INTERNAL" || true
-    if [ ! -L "$APPDATA_INTERNAL/loadorder.txt" ]; then
-        ln -s "$APPDATA_VORTEX/loadorder.txt" "$APPDATA_INTERNAL/loadorder.txt"
+if [ -d "$SKYRIM_APPDATA" ] && [ -d "$APPDATA_VORTEX" ]; then
+    if [ ! -L "${SKYRIM_APPDATA}loadorder.txt" ]; then
+        rm -f "${SKYRIM_APPDATA}loadorder.txt"
+        ln -s "$APPDATA_VORTEX/loadorder.txt" "${SKYRIM_APPDATA}loadorder.txt"
     fi
-    rm -f "$APPDATA_INTERNAL/Plugins.txt"
-    ln -s "$APPDATA_VORTEX/plugins.txt" "$APPDATA_INTERNAL/Plugins.txt"
+    rm -f "${SKYRIM_APPDATA}Plugins.txt"
+    ln -s "$APPDATA_VORTEX/plugins.txt" "${SKYRIM_APPDATA}Plugins.txt"
+else
+    echo "Run Skyrim Special Edition once through Steam and run Vortex once, then run STR Post-Deploy again."
 fi
 
-if [ -d "$APPDATA_EXTERNAL" ] && [ -d "$APPDATA_VORTEX" ]; then
-    mkdir -p "$APPDATA_EXTERNAL" || true
-    if [ ! -L "$APPDATA_EXTERNAL/loadorder.txt" ]; then
-        ln -s "$APPDATA_VORTEX/loadorder.txt" "$APPDATA_EXTERNAL/loadorder.txt"
-    fi
-    rm -f "$APPDATA_EXTERNAL/Plugins.txt"
-    ln -s "$APPDATA_VORTEX/plugins.txt" "$APPDATA_EXTERNAL/Plugins.txt"
-fi
-
-# Add registry keys
-USER_REG_PATH_INTERNAL="/home/deck/.steam/steam/steamapps/compatdata/489830/pfx/user.reg"
-USER_REG_PATH_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/user.reg"
-TIMESTAMP=$(date +%s)
-
-if [ -f "$USER_REG_PATH_INTERNAL" ] && [ -d "$HOME/.steam/steam/steamapps/compatdata/489830/pfx/" ]; then
-    echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >> "$USER_REG_PATH_INTERNAL"
-    echo "\"TitleExe\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >> "$USER_REG_PATH_INTERNAL"
-    echo "\"TitlePath\"=\"Z:\\\\\\\\home\\\\\\\\deck\\\\\\\\.local\\\\\\\\share\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >> "$USER_REG_PATH_INTERNAL"
-fi
-
-if [ -f "$USER_REG_PATH_EXTERNAL" ] && [ -d "/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/" ]; then
-    echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $TIMESTAMP" >> "$USER_REG_PATH_EXTERNAL"
-    echo "\"TitleExe\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\\\\\\\\SkyrimSE.exe\"" >> "$USER_REG_PATH_EXTERNAL"
-    echo "\"TitlePath\"=\"Z:\\\\\\\\run\\\\\\\\media\\\\\\\\mmcblk0p1\\\\\\\\steamapps\\\\\\\\common\\\\\\\\Skyrim Special Edition\"" >> "$USER_REG_PATH_EXTERNAL"
+# Add registry keys so Skyrim Together Reborn can find SkyrimSE.exe
+USER_REG="${SKYRIM_COMPATDATA}pfx/user.reg"
+if [ -f "$USER_REG" ]; then
+    # Z: is the Linux root in Proton, every separator is written as four backslashes like before
+    WIN_DIR="$(python3 -c 'import sys; print("Z:" + sys.argv[1].rstrip("/").replace("/", "\\\\\\\\"))' "$SKYRIM_DIR")"
+    SEP='\\\\'
+    {
+        echo "[Software\\\\TiltedPhoques\\\\TiltedEvolution\\\\Skyrim Special Edition] $(date +%s)"
+        echo "\"TitleExe\"=\"${WIN_DIR}${SEP}SkyrimSE.exe\""
+        echo "\"TitlePath\"=\"${WIN_DIR}\""
+    } >> "$USER_REG"
 fi
 
 # Restart Steam

@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-SKYRIM_INTERNAL="$HOME/.steam/steam/steamapps/common/Skyrim Special Edition/"
-SKYRIM_EXTERNAL="/run/media/mmcblk0p1/steamapps/common/Skyrim Special Edition/"
+source ~/.Cyphs/SteamDeckSTR-master/vortex/skyrim-paths.sh
 
-APPDATA_INTERNAL="$HOME/.local/share/Steam/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
-APPDATA_EXTERNAL="/run/media/mmcblk0p1/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition/"
+if [ -z "$SKYRIM_LIBRARY" ]; then
+    echo "Skyrim Special Edition is not installed in any Steam library."
+    sleep 5
+    exit 1
+fi
+echo "Skyrim Special Edition found in $SKYRIM_LIBRARY"
 
 CC_BACKUP="$HOME/.Cyphs/SteamDeckSTR-master/CC Backup/"
 
 # Array of files and directories to delete
-FILES_AND_DIRS=("EarlyLoad.dll" "STServer.dll" "SkyrimTogether.exe" "SkyrimTogetherServer.exe" "TPProcess.exe" "chrome_100_percent.pak" "chrome_200_percent.pak" "chrome_elf.dll" "crashpad_handler.exe" "d3dcompiler_47.dll" "discord_game_sdk.dll" "icudtl.dat" "imgui.ini" "libEGL.dll" "libGLESv2.dll" "libcef.dll" "resources.pak" "snapshot_blob.bin" "uv.dll" "v8_context_snapshot.bin" "vk_swiftshader.dll" "vulkan-1.dll" "UI" "assets" "config" "locales" "logs" "swiftshader" "cache" ".sentry-native" "__folder_managed_by_vortex")
+FILES_AND_DIRS=("EarlyLoad.dll" "STServer.dll" "SkyrimTogether.exe" "SkyrimTogetherServer.exe" "TPProcess.exe" "chrome_100_percent.pak" "chrome_200_percent.pak" "chrome_elf.dll" "crashpad_handler.exe" "d3dcompiler_47.dll" "discord_game_sdk.dll" "icudtl.dat" "imgui.ini" "libEGL.dll" "libGLESv2.dll" "libcef.dll" "resources.pak" "snapshot_blob.bin" "uv.dll" "v8_context_snapshot.bin" "vk_swiftshader.dll" "vulkan-1.dll" "dxcompiler.dll" "dxil.dll" "cef_debug.log" "steamnetworkingsockets.log" "steam_appid.txt" "UI" "assets" "config" "locales" "logs" "resources" "swiftshader" "cache" ".sentry-native" "__folder_managed_by_vortex")
 
 # Array of files to restore
 FILES_TO_RESTORE=("ccBGSSSE001-Fish.bsa" "ccBGSSSE001-Fish.esm" "ccBGSSSE025-AdvDSGS.bsa" "ccBGSSSE025-AdvDSGS.esm" "ccBGSSSE037-Curios.bsa" "ccBGSSSE037-Curios.esl" "ccQDRSSE001-SurvivalMode.bsa" "ccQDRSSE001-SurvivalMode.esl")
@@ -44,34 +47,26 @@ restore_file() {
 }
 
 
-# Delete files and directories from both Skyrim directories
+# Delete Skyrim Together Reborn files from the game folder
 for FILE_OR_DIR in "${FILES_AND_DIRS[@]}"; do
-    delete_file_or_dir "${SKYRIM_INTERNAL}${FILE_OR_DIR}"
-    delete_file_or_dir "${SKYRIM_EXTERNAL}${FILE_OR_DIR}"
+    delete_file_or_dir "${SKYRIM_DIR}${FILE_OR_DIR}"
 done
 
-# Delete files that start with crash_UTC in both Skyrim directories
-for FILE in "${SKYRIM_INTERNAL}"crash_UTC*; do
-    delete_file_or_dir "$FILE"
-done
-for FILE in "${SKYRIM_EXTERNAL}"crash_UTC*; do
+# Delete files that start with crash_UTC
+for FILE in "${SKYRIM_DIR}"crash_UTC*; do
     delete_file_or_dir "$FILE"
 done
 
-# Delete loadorder.txt and Plugins.txt symlinks from both AppData directories
-delete_file_or_dir "${APPDATA_INTERNAL}loadorder.txt"
-delete_file_or_dir "${APPDATA_INTERNAL}Plugins.txt"
-delete_file_or_dir "${APPDATA_EXTERNAL}loadorder.txt"
-delete_file_or_dir "${APPDATA_EXTERNAL}Plugins.txt"
+# Delete loadorder.txt and Plugins.txt symlinks
+delete_file_or_dir "${SKYRIM_APPDATA}loadorder.txt"
+delete_file_or_dir "${SKYRIM_APPDATA}Plugins.txt"
 
-# Rename _SkyrimSELauncher.exe back to SkyrimSELauncher.exe in both Skyrim directories
-rename_launcher "$SKYRIM_INTERNAL"
-rename_launcher "$SKYRIM_EXTERNAL"
+# Rename _SkyrimSELauncher.exe back to SkyrimSELauncher.exe (replaces the SkyrimTogether.exe link)
+rename_launcher "$SKYRIM_DIR"
 
-# Restore files from CC Backup in both Skyrim directories
+# Restore files from CC Backup
 for FILE in "${FILES_TO_RESTORE[@]}"; do
-    restore_file "$SKYRIM_INTERNAL" "$FILE"
-    restore_file "$SKYRIM_EXTERNAL" "$FILE"
+    restore_file "$SKYRIM_DIR" "$FILE"
 done
 
 echo "Undo script completed. This window will close in 5 seconds....."
