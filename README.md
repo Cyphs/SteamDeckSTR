@@ -10,7 +10,7 @@ SteamDeckSTR attempts to facilitate the install process specific to playing [Sky
 
 Mod Organizer 2 is my mod manager of choice on Windows, but Vortex seems more straightforward for running STR on the Deck and might be more user-friendly.
 
-Supports only the **latest Steam version of Skyrim Special Edition** (1.7.104) and Skyrim Together Reborn 1.8.1 or newer currently. Support might be added for the GOG version later. MO2 support hopefully soon.
+Supports only the **latest Steam version of Skyrim Special Edition** (1.7.104) and Skyrim Together Reborn 1.8.1 or newer currently.
 
 **Important Note:** Skyrim Together only provides support for Windows on their official social media spaces (Discord, Reddit, etc.) If you have issues using this, do not ask for support there. You can [submit an issue here](https://github.com/Cyphs/SteamDeckSTR/issues/new/choose) or message me on Discord: internalerrorx
 
@@ -42,7 +42,7 @@ curl https://raw.githubusercontent.com/Cyphs/SteamDeckSTR/master/install.sh | ba
 
 ## Vortex
 
-After installing the SteamDeckSTR scripts, you should have a shortcut on the desktop to install Vortex. *Double click it to run (execute).** If you accidentally Open it, it won't run, it'll just open the script in a text editor and do nothing.
+After installing the SteamDeckSTR scripts, you should have a shortcut on the desktop to install Vortex. **Double click it to run (execute).** If you accidentally Open it, it won't run, it'll just open the script in a text editor and do nothing.
 
 This will automatically:
 
@@ -52,7 +52,6 @@ This will automatically:
 4. Add an 'STR Post-Deploy' shortcut to desktop
    * This will set up various things for STR and mods to run correctly when ran through Steam
 5. Map J: to Internal games, and K: to the SD card library if Skyrim is installed there, in Vortex
-   * E: Is the SD Card root
 6. Set up Vortex for Skyrim Special Edition: game folder, Steam as the game store, staging folder on the same drive, Hardlink deployment, new plugins enabled, and no automatic updates
 7. [Delete all included Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) (Survival, Fishing, etc.) to reduce bugs and crashes with STR
    * They'll be backed up to `/home/deck/.Cyphs/SteamDeckSTR-master/CC Backup/` in case you need them again, but can also be restored by verifying game files on Steam.
@@ -91,8 +90,8 @@ Double click **Update SteamDeckSTR** on the desktop. It upgrades Vortex to 1.15.
    * If it doesn't:
       * Go to Settings -> Mods
       * Set the **Base Path** to:
-        * `K:\vortex_mods\{GAME}` if your games are on the SD Card
-        * `J:\vortex_mods\{GAME}` if your games are on the internal drive
+        * `K:\Vortex Mods\{game}` if your games are on the SD Card
+        * `J:\Vortex Mods\{game}` if your games are on the internal drive
       * Press **Apply**
       * **Deployment Method** will now allow you to select `Hardlink deployment`
       * Press **Apply** again
@@ -125,9 +124,9 @@ Make sure you have downloaded the latest **All in One** file of Address Library 
 
 It automates things like:
 
-* Copying required files from Vortex's AppData folder to the game's AppData folder
-  * plugins.txt, loadorder.txt, etc. for mods to be enabled
+* Linking plugins.txt and loadorder.txt from Vortex to the game so your mods are enabled, and making sure the Skyrim Together Reborn plugins are turned on
 * Setting up Skyrim Together Reborn to launch through Steam when running the game normally and setting the Registry paths for STR to automatically locate SkyrimSE.exe
+* Cleaning up files left over from older Skyrim Together Reborn versions, and fixing the launcher again after a Skyrim update
 
 **Make sure to execute this after installing the mods in Vortex.**
 
@@ -146,8 +145,9 @@ It automates things like:
 
 * [SD card installs](https://github.com/Cyphs/SteamDeckSTR/issues/1) are now detected through Steam's library list, but they're less tested than the internal storage. If something doesn't work on an SD card, please report it in that issue.
 
-* Using the Steam virtual keyboard in Gaming Mode then closing it crashes the game. This may prevent you from using the text chat without an external keyboard connected. You might also need an external keyboard or remote desktop program at least once to enter a private server's IP address. It should be saved in the UI the next time it's launched.
-  * Apparently, this happens with the game on the Steam Deck in general, not just with Skyrim Together Reborn. I've found a temporary solution until there's a real fix. Each time you play, open the Creations menu before loading your save and press LB to search. Close it, then load your save. The virtual keyboard won't crash now until next restart. Make sure `SteamDeck=0 %command%` is **removed** from Steam Launch Options or this won't work! Video: https://youtu.be/Km5ZJ2fAzC8
+* ~~Using the Steam virtual keyboard in Gaming Mode then closing it crashes the game. This may prevent you from using the text chat without an external keyboard connected. You might also need an external keyboard or remote desktop program at least once to enter a private server's IP address. It should be saved in the UI the next time it's launched.~~
+  * ~~Apparently, this happens with the game on the Steam Deck in general, not just with Skyrim Together Reborn. I've found a temporary solution until there's a real fix. Each time you play, open the Creations menu before loading your save and press LB to search. Close it, then load your save. The virtual keyboard won't crash now until next restart. Make sure `SteamDeck=0 %command%` is **removed** from Steam Launch Options or this won't work! Video: https://youtu.be/Km5ZJ2fAzC8~~
+  * **Fixed:** the latest Skyrim Special Edition update fixed the virtual keyboard crash on the Steam Deck, so the workaround above is no longer needed.
 
 * The F3 key for the debug UI overlay does not work. This may prevent you from using things like the quest debugger as the Party Leader to advance through bugged quests.
 * The F4 key, for revealing other players with the glow effect, similarly does not work in Linux by default.
@@ -171,6 +171,8 @@ Optionally, to also remove the mod staging folder Vortex made next to the game, 
 
 ```bash
 rm -rf ~/.steam/steam/steamapps/common/"Vortex Mods"
+# If Skyrim is on the SD card, the staging folder is on the card instead:
+rm -rf /run/media/deck/*/steamapps/common/"Vortex Mods" /run/media/deck/*/SteamLibrary/steamapps/common/"Vortex Mods"
 rm -rf ~/.steam/root/compatibilitytools.d/GE-Proton10-34/
 rm -rf ~/.steam/root/compatibilitytools.d/UMU-Proton-*/
 rm -rf ~/.local/share/umu/
