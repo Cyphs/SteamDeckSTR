@@ -20,7 +20,8 @@ FILES_TO_RESTORE=("ccBGSSSE001-Fish.bsa" "ccBGSSSE001-Fish.esm" "ccBGSSSE025-Adv
 
 # Function to delete a file or directory
 delete_file_or_dir() {
-  if [ -e "$1" ]; then
+  # -L too, so links whose target Vortex already removed are deleted as well
+  if [ -e "$1" ] || [ -L "$1" ]; then
       echo "Deleting $1"
       rm -rf "$1"
   else
@@ -47,7 +48,28 @@ restore_file() {
 }
 
 
-# Delete Skyrim Together Reborn files from the game folder
+# Rename _SkyrimSELauncher.exe back to SkyrimSELauncher.exe (replaces the SkyrimTogether.exe link)
+rename_launcher "$SKYRIM_DIR"
+if [ -L "${SKYRIM_DIR}SkyrimSELauncher.exe" ]; then
+    # No backup of the original launcher, so remove the STR link and let Steam restore the real one
+    rm -f "${SKYRIM_DIR}SkyrimSELauncher.exe"
+    echo "The original SkyrimSELauncher.exe backup was not found. In Steam, right-click Skyrim Special Edition > Properties > Installed Files > Verify integrity of game files to get it back."
+    LAUNCHER_MISSING=1
+fi
+
+# Delete every link STR Post-Deploy made in the game folder (also covers files newer STR versions add),
+# then the folders that held them if they are now empty
+find "$SKYRIM_DIR" -path "${SKYRIM_DIR}Data" -prune -o -type l -lname "*SkyrimTogetherReborn*" -print0 |
+    while IFS= read -r -d '' LINK; do
+        echo "Deleting $LINK"
+        rm -f "$LINK"
+        DIR="$(dirname "$LINK")"
+        while [ "$DIR/" != "$SKYRIM_DIR" ] && rmdir "$DIR" 2>/dev/null; do
+            DIR="$(dirname "$DIR")"
+        done
+    done
+
+# Delete Skyrim Together Reborn files from the game folder, including files it creates while running
 for FILE_OR_DIR in "${FILES_AND_DIRS[@]}"; do
     delete_file_or_dir "${SKYRIM_DIR}${FILE_OR_DIR}"
 done
@@ -60,9 +82,6 @@ done
 # Delete loadorder.txt and Plugins.txt symlinks
 delete_file_or_dir "${SKYRIM_APPDATA}loadorder.txt"
 delete_file_or_dir "${SKYRIM_APPDATA}Plugins.txt"
-
-# Rename _SkyrimSELauncher.exe back to SkyrimSELauncher.exe (replaces the SkyrimTogether.exe link)
-rename_launcher "$SKYRIM_DIR"
 
 # Restore files from CC Backup
 for FILE in "${FILES_TO_RESTORE[@]}"; do
@@ -81,5 +100,8 @@ if [ -n "${STEAM_WAS_RUNNING:-}" ]; then
     nohup steam > /dev/null 2>&1 &
 fi
 
+if [ -n "${LAUNCHER_MISSING:-}" ]; then
+    echo "Remember to verify the game files in Steam to get SkyrimSELauncher.exe back."
+fi
 echo "Undo script completed. This window will close in 5 seconds....."
 sleep 5
