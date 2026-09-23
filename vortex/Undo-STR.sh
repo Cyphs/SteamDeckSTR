@@ -1,14 +1,19 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+source ~/.Cyphs/SteamDeckSTR-master/vortex/quiet.sh undo-str
+say "Undo STR"
+say ""
+
 source ~/.Cyphs/SteamDeckSTR-master/vortex/skyrim-paths.sh
 
 if [ -z "$SKYRIM_LIBRARY" ]; then
-    echo "Skyrim Special Edition is not installed in any Steam library."
-    sleep 5
+    say "Skyrim Special Edition is not installed in any Steam library."
+    pause_window
     exit 1
 fi
-echo "Skyrim Special Edition found in $SKYRIM_LIBRARY"
+say "Found Skyrim Special Edition in $SKYRIM_LIBRARY"
+say "Removing Skyrim Together Reborn from the game folder..."
 
 CC_BACKUP="$HOME/.Cyphs/SteamDeckSTR-master/CC Backup/"
 
@@ -53,7 +58,7 @@ rename_launcher "$SKYRIM_DIR"
 if [ -L "${SKYRIM_DIR}SkyrimSELauncher.exe" ]; then
     # No backup of the original launcher, so remove the STR link and let Steam restore the real one
     rm -f "${SKYRIM_DIR}SkyrimSELauncher.exe"
-    echo "The original SkyrimSELauncher.exe backup was not found. In Steam, right-click Skyrim Special Edition > Properties > Installed Files > Verify integrity of game files to get it back."
+    echo "The original SkyrimSELauncher.exe backup was not found."
     LAUNCHER_MISSING=1
 fi
 
@@ -79,7 +84,7 @@ for FILE in "${SKYRIM_DIR}"crash_UTC*; do
     delete_file_or_dir "$FILE"
 done
 
-# Delete loadorder.txt and Plugins.txt symlinks
+# Delete the game's copies of loadorder.txt and Plugins.txt (older versions used links)
 delete_file_or_dir "${SKYRIM_APPDATA}loadorder.txt"
 delete_file_or_dir "${SKYRIM_APPDATA}Plugins.txt"
 
@@ -90,7 +95,7 @@ done
 
 # Remove the F3/F4 launch option STR Post-Deploy added (Steam has to be closed to change it)
 if pgrep -x "steam" > /dev/null; then
-    echo "Restarting Steam. Please wait..."
+    say "Restarting Steam, please wait..."
     steam -shutdown || true
     while pgrep -x "steam" > /dev/null; do sleep 1; done
     STEAM_WAS_RUNNING=1
@@ -100,8 +105,12 @@ if [ -n "${STEAM_WAS_RUNNING:-}" ]; then
     nohup steam > /dev/null 2>&1 &
 fi
 
+say ""
 if [ -n "${LAUNCHER_MISSING:-}" ]; then
-    echo "Remember to verify the game files in Steam to get SkyrimSELauncher.exe back."
+    say "Done, but the original SkyrimSELauncher.exe backup was missing. In Steam, right-click"
+    say "Skyrim Special Edition > Properties > Installed Files > Verify integrity of game files to get it back."
+    pause_window
+else
+    say "Done! Skyrim Special Edition is back to normal."
+    sleep 5
 fi
-echo "Undo script completed. This window will close in 5 seconds....."
-sleep 5

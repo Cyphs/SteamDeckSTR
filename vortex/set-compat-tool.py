@@ -2,7 +2,8 @@
 # Selects a compatibility tool for one game in Steam's config.vdf (same as
 # Properties > Compatibility > Force the use of a specific Steam Play compatibility tool).
 # Steam must not be running, or it overwrites config.vdf on exit.
-# Usage: set-compat-tool.py <config.vdf> <appid> <tool name>
+# Usage: set-compat-tool.py [--check] <config.vdf> <appid> <tool name>
+# With --check nothing is changed, it exits with 0 if the tool is already selected and 1 if not.
 import re
 import shutil
 import sys
@@ -46,7 +47,9 @@ def entry(appid, tool):
 
 
 def main():
-    path, appid, tool = sys.argv[1:4]
+    args = sys.argv[1:]
+    check = args[:1] == ["--check"]
+    path, appid, tool = args[1:4] if check else args[0:3]
     with open(path, encoding="utf-8") as f:
         text = f.read()
 
@@ -58,6 +61,10 @@ def main():
         block = found
 
     mapping = find_block(text, block[0] + 1, block[1], "CompatToolMapping")
+    if check:
+        game = mapping and find_block(text, mapping[0] + 1, mapping[1], appid)
+        name = game and re.search(r'"name"\s*"([^"]*)"', text[game[0] : game[1]])
+        sys.exit(0 if name and name.group(1) == tool else 1)
     if mapping is None:
         # No game has a forced tool yet, so add the whole CompatToolMapping block
         insert = '\n\t\t\t\t"CompatToolMapping"\n\t\t\t\t{' + entry(appid, tool) + "\n\t\t\t\t}"

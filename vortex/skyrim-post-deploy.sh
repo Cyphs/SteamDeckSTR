@@ -1,20 +1,26 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+source ~/.Cyphs/SteamDeckSTR-master/vortex/quiet.sh post-deploy
+say "STR Post-Deploy"
+say ""
+
 source ~/.Cyphs/SteamDeckSTR-master/vortex/skyrim-paths.sh
 
 if [ -z "$SKYRIM_LIBRARY" ]; then
-    echo "Skyrim Special Edition is not installed in any Steam library."
-    sleep 5
+    say "Skyrim Special Edition is not installed in any Steam library. Install it in Steam first."
+    pause_window
     exit 1
 fi
-echo "Skyrim Special Edition found in $SKYRIM_LIBRARY"
+say "Found Skyrim Special Edition in $SKYRIM_LIBRARY"
 
 APPDATA_VORTEX="$HOME/.vortex-linux/compatdata/pfx/drive_c/users/steamuser/AppData/Local/Skyrim Special Edition"
 
 CC_BACKUP="$HOME/.Cyphs/SteamDeckSTR-master/CC Backup/"
 
 FILES_TO_BACKUP=("ccBGSSSE001-Fish.bsa" "ccBGSSSE001-Fish.esm" "ccBGSSSE025-AdvDSGS.bsa" "ccBGSSSE025-AdvDSGS.esm" "ccBGSSSE037-Curios.bsa" "ccBGSSSE037-Curios.esl" "ccQDRSSE001-SurvivalMode.bsa" "ccQDRSSE001-SurvivalMode.esl")
+
+say "Setting up Skyrim Together Reborn..."
 
 # Remove and back up CC content
 mkdir -p "$CC_BACKUP"
@@ -60,6 +66,11 @@ str_setup() {
     fi
 }
 
+if [ ! -f "${SKYRIM_DIR}Data/SkyrimTogetherReborn/SkyrimTogether.exe" ]; then
+    say "Skyrim Together Reborn was not found in the game's Data folder. Install it in Vortex first, then run STR Post-Deploy again."
+    pause_window
+    exit 1
+fi
 str_setup "$SKYRIM_DIR" "${SKYRIM_DIR}Data/SkyrimTogetherReborn"
 
 # Let Vortex use the game's own INI files and saves
@@ -68,11 +79,17 @@ str_setup "$SKYRIM_DIR" "${SKYRIM_DIR}Data/SkyrimTogetherReborn"
 # Vortex 2.x needs Steam's library list inside its own prefix
 python3 ~/.Cyphs/SteamDeckSTR-master/vortex/link-steam-libraries.py "$STEAM_ROOT/steamapps/libraryfolders.vdf" "$HOME/.vortex-linux/compatdata/pfx" || true
 
-# Newer Vortex versions leave new plugins disabled, so make sure the Skyrim Together
-# Reborn plugins are enabled (Vortex picks this up from plugins.txt)
-if [ -f "$APPDATA_VORTEX/plugins.txt" ]; then
-    echo "Enabling Skyrim Together Reborn plugins"
-    python3 - "$APPDATA_VORTEX/plugins.txt" "${SKYRIM_DIR}Data" <<'EOF'
+# Give the game its own copy of Vortex's plugin list (a link would let the game rewrite
+# Vortex's file, which makes Vortex ask about "Plugin list changed outside Vortex"),
+# and make sure the Skyrim Together Reborn plugins are enabled in that copy
+if [ -d "$SKYRIM_APPDATA" ] && [ -f "$APPDATA_VORTEX/plugins.txt" ]; then
+    echo "Copying plugins.txt and loadorder.txt from Vortex"
+    rm -f "${SKYRIM_APPDATA}Plugins.txt" "${SKYRIM_APPDATA}loadorder.txt"
+    cp "$APPDATA_VORTEX/plugins.txt" "${SKYRIM_APPDATA}Plugins.txt"
+    if [ -f "$APPDATA_VORTEX/loadorder.txt" ]; then
+        cp "$APPDATA_VORTEX/loadorder.txt" "${SKYRIM_APPDATA}loadorder.txt"
+    fi
+    python3 - "${SKYRIM_APPDATA}Plugins.txt" "${SKYRIM_DIR}Data" <<'EOF'
 import os
 import sys
 
@@ -93,19 +110,8 @@ for plugin in str_plugins:
 with open(plugins_txt, "w", encoding="utf-8") as f:
     f.write("\n".join(lines) + "\n")
 EOF
-fi
-
-# Configuration file handling
-echo "Symlinking loadorder.txt and Plugins.txt"
-if [ -d "$SKYRIM_APPDATA" ] && [ -d "$APPDATA_VORTEX" ]; then
-    if [ ! -L "${SKYRIM_APPDATA}loadorder.txt" ]; then
-        rm -f "${SKYRIM_APPDATA}loadorder.txt"
-        ln -s "$APPDATA_VORTEX/loadorder.txt" "${SKYRIM_APPDATA}loadorder.txt"
-    fi
-    rm -f "${SKYRIM_APPDATA}Plugins.txt"
-    ln -s "$APPDATA_VORTEX/plugins.txt" "${SKYRIM_APPDATA}Plugins.txt"
 else
-    echo "Run Skyrim Special Edition once through Steam and run Vortex once, then run STR Post-Deploy again."
+    say "Run Skyrim Special Edition once through Steam and install your mods in Vortex, then run STR Post-Deploy again."
 fi
 
 # Add registry keys so Skyrim Together Reborn can find SkyrimSE.exe
@@ -127,8 +133,8 @@ mkdir -p ~/.config/protonfixes/localfixes
 cp ~/.Cyphs/SteamDeckSTR-master/vortex/protonfixes/489830.py ~/.config/protonfixes/localfixes/489830.py
 
 # Restart Steam
-echo "Restarting Steam. Please wait..."
-steam -shutdown
+say "Restarting Steam, please wait..."
+steam -shutdown || true
 while pgrep -x "steam" > /dev/null; do sleep 1; done
 
 # F3 (debug UI) and F4 (reveal players) only work under Proton 10 when Wine thinks it runs
@@ -137,5 +143,6 @@ python3 ~/.Cyphs/SteamDeckSTR-master/vortex/set-launch-option.py add "$STEAM_ROO
 
 nohup steam > /dev/null 2>&1 &
 
-echo "Success! This window will close in 5 seconds....."
+say ""
+say "Done! You can play Skyrim Together Reborn from Steam now."
 sleep 5

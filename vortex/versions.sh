@@ -14,3 +14,15 @@ DOTNET_URL="https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/9.0.13/win
 
 UMU_DIR="$HOME/.Cyphs/umu"
 COMPAT_DIR="$HOME/.steam/root/compatibilitytools.d"
+
+# Mod versions the scripts were tested with, shown as a reminder after updating
+STR_VERSION="1.8.2"
+ADDRESS_LIBRARY_VERSION="All in One v13"
+
+umu_up_to_date() {
+    "$UMU_DIR/umu-run" --version 2>/dev/null | grep -q "version $UMU_VERSION "
+}
+
+proton_up_to_date() {
+    [ -f "$COMPAT_DIR/$PROTON_DIR/proton" ]
+}

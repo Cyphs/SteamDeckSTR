@@ -10,7 +10,7 @@ SteamDeckSTR attempts to facilitate the install process specific to playing [Sky
 
 Supports only the **latest Steam version of Skyrim Special Edition** (1.7.104) and the latest Skyrim Together Reborn (1.8.2) currently.
 
-**Important Note:** Skyrim Together only provides support for Windows on their official social media spaces (Discord, Reddit, etc.) If you have issues using this, do not ask for support there. You can [check or submit an issue here](https://github.com/Cyphs/SteamDeckSTR/issues) or message me on Discord: internalerrorx
+**Important Note:** Skyrim Together only provides support for Windows on their official social media spaces (Discord, Reddit, etc.) If you have issues using this, do not ask for support there. You can [check or submit an issue here](https://github.com/Cyphs/SteamDeckSTR/issues) or message me on Discord: internalerrorx. The desktop shortcuts save their full output in `~/.Cyphs/logs/`, so attach the log from there when reporting a problem.
 
 # Install
 
@@ -57,7 +57,7 @@ This will automatically:
 
 ### Already installed SteamDeckSTR before?
 
-Double click **Update SteamDeckSTR** on the desktop. It upgrades Vortex to 2.7.0 and switches it over to umu-launcher, installs GE-Proton10-34 and selects it for Skyrim Special Edition in Steam, keeping your Vortex mods and settings. Steam will restart. Then update Skyrim Together Reborn and Address Library in Vortex, and run STR Post-Deploy again.
+Double click **Update SteamDeckSTR** on the desktop. It upgrades Vortex to 2.7.0 and switches it over to umu-launcher, installs GE-Proton10-34 and selects it for Skyrim Special Edition in Steam, keeping your Vortex mods and settings. Anything that's already up to date is skipped, and Steam only restarts if it needs to. Then update Skyrim Together Reborn and Address Library in Vortex (choose Replace when Vortex asks about the old version), and run STR Post-Deploy again. The Update window shows these steps at the end too.
 
 ## Generate the Game Data
 
@@ -93,13 +93,13 @@ Make sure you have downloaded the latest **All in One** file of Address Library 
 
 It automates things like:
 
-* Linking plugins.txt and loadorder.txt from Vortex to the game so your mods are enabled, and making sure the Skyrim Together Reborn plugins are turned on
+* Copying plugins.txt and loadorder.txt from Vortex to the game so your mods are enabled, and making sure the Skyrim Together Reborn plugins are turned on
 * Setting up Skyrim Together Reborn to launch through Steam when running the game normally and setting the Registry paths for STR to automatically locate SkyrimSE.exe
 * Cleaning up files left over from older Skyrim Together Reborn versions, and fixing the launcher again after a Skyrim update
 * Adding `SteamGameId=302190` to the game's Launch Options in Steam so the F3 and F4 keys work (see Currently Known Issues below). Anything else you have in Launch Options is kept, and Undo STR removes it again.
 * Making sure GE-Proton starts Skyrim Together Reborn, not SKSE's loader, when SKSE is installed
 
-**Make sure to execute this after installing the mods in Vortex.**
+**Make sure to execute this after installing the mods in Vortex, and again whenever you change your mods in Vortex.**
 
 * To use the vanilla Skyrim Special Edition launcher (for example to change graphics settings), run Undo STR, then run STR Post-Deploy again afterwards.
 * If the game doesn't start, try restarting your Steam Deck first.

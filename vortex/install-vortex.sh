@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source ~/.Cyphs/SteamDeckSTR-master/vortex/quiet.sh install-vortex
+say "Install Vortex"
+say "This takes a few minutes. Steam will restart when it's done."
+say ""
+
 source ~/.Cyphs/SteamDeckSTR-master/vortex/versions.sh
 
 VORTEX_INSTALLER="vortex-setup-$VORTEX_VERSION.exe"
@@ -12,16 +17,24 @@ mkdir -p ~/.Cyphs/SteamDeckSTR-master/vortex/
 cd ~/.Cyphs/SteamDeckSTR-master/vortex/
 
 # Install umu-launcher, which runs Vortex with its own UMU-Proton
-./install-umu.sh
+if ! umu_up_to_date; then
+    say "Installing umu-launcher..."
+    ./install-umu.sh
+fi
 
 # Install GE-Proton for Skyrim, selected for it in Steam at the end
-./install-proton.sh
+if ! proton_up_to_date; then
+    say "Downloading $PROTON_BUILD (about 500 MB)..."
+    ./install-proton.sh
+fi
 
 # Download Vortex installer
-wget -O "$VORTEX_INSTALLER" "$VORTEX_URL"
+say "Downloading Vortex $VORTEX_VERSION and .NET..."
+python3 ./download.py "$VORTEX_URL" "$VORTEX_INSTALLER"
 
 # Install .NET runtime
-wget -O dotnet-runtime.exe "$DOTNET_URL"
+python3 ./download.py "$DOTNET_URL" dotnet-runtime.exe
+say "Installing .NET and Vortex (Proton downloads its files the first time, so this part is the slowest)..."
 "$UMU_DIR/umu-run" dotnet-runtime.exe /q
 
 # Install Vortex
@@ -51,6 +64,9 @@ fi
 # Vortex 2.x needs Steam's library list inside its own prefix
 python3 ~/.Cyphs/SteamDeckSTR-master/vortex/link-steam-libraries.py "$STEAM_ROOT/steamapps/libraryfolders.vdf" "$HOME/.vortex-linux/compatdata/pfx" || true
 
+say "Setting up Vortex for Skyrim Special Edition..."
+wait_for_vortex_closed
+
 # Preset the Skyrim folder, game store, staging folder, hardlink deployment and
 # no automatic updates in Vortex, using the drive letter of Skyrim's library
 PRESET_DRIVE=""
@@ -62,7 +78,7 @@ if [ -n "$SKYRIM_LIBRARY" ]; then
     fi
 fi
 python3 ~/.Cyphs/SteamDeckSTR-master/vortex/preset-vortex.py "$WINEPREFIX/drive_c/sdstr-preset.bat" $PRESET_DRIVE
-"$UMU_DIR/umu-run" cmd.exe /c "C:\\sdstr-preset.bat" || echo "Could not preset Vortex settings, set them in Vortex instead."
+timeout 600 "$UMU_DIR/umu-run" cmd.exe /c "C:\\sdstr-preset.bat" || echo "Could not preset Vortex settings, set them in Vortex instead."
 rm -f "$WINEPREFIX/drive_c/sdstr-preset.bat"
 
 update-desktop-database ~/.local/share/applications || true
@@ -71,6 +87,8 @@ rm -f ~/Desktop/install-vortex.desktop
 ln -sf ~/.local/share/applications/vortex.desktop ~/Desktop/
 ln -sf ~/.Cyphs/SteamDeckSTR-master/vortex/skyrim-post-deploy.desktop ~/Desktop/
 ln -sf ~/.Cyphs/SteamDeckSTR-master/vortex/Undo-STR.desktop ~/Desktop/
+
+say "Backing up the Creation Club content..."
 
 # Back up and remove the included Creation Club content
 FILES_TO_BACKUP=("ccBGSSSE001-Fish.bsa" "ccBGSSSE001-Fish.esm" "ccBGSSSE025-AdvDSGS.bsa" "ccBGSSSE025-AdvDSGS.esm" "ccBGSSSE037-Curios.bsa" "ccBGSSSE037-Curios.esl" "ccQDRSSE001-SurvivalMode.bsa" "ccQDRSSE001-SurvivalMode.esl")
@@ -89,11 +107,12 @@ else
 fi
 
 # Restart Steam, selecting GE-Proton for Skyrim while it's closed
-echo "Restarting Steam. Please wait..."
+say "Restarting Steam, please wait..."
 steam -shutdown || true
 while pgrep -x "steam" > /dev/null; do sleep 1; done
 python3 ~/.Cyphs/SteamDeckSTR-master/vortex/set-compat-tool.py "$STEAM_ROOT/config/config.vdf" "$SKYRIM_APPID" "$PROTON_DIR" || echo "Could not select $PROTON_DIR for Skyrim, pick it in Steam instead."
 nohup steam > /dev/null 2>&1 &
 
-echo "Success! Exiting in 5 seconds....."
+say ""
+say "Done! Vortex is installed. Follow the next steps in the README or video."
 sleep 5
