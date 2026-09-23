@@ -48,6 +48,9 @@ if [ -n "$SKYRIM_LIBRARY" ] && [ "$(realpath "$SKYRIM_LIBRARY")" != "$(realpath 
     ln -sfn "$SKYRIM_LIBRARY/steamapps/common/" k:
 fi
 
+# Vortex 2.x needs Steam's library list inside its own prefix
+python3 ~/.Cyphs/SteamDeckSTR-master/vortex/link-steam-libraries.py "$STEAM_ROOT/steamapps/libraryfolders.vdf" "$HOME/.vortex-linux/compatdata/pfx" || true
+
 # Preset the Skyrim folder, game store, staging folder, hardlink deployment and
 # no automatic updates in Vortex, using the drive letter of Skyrim's library
 PRESET_DRIVE=""

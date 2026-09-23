@@ -3,7 +3,11 @@ source ~/.Cyphs/SteamDeckSTR-master/vortex/versions.sh
 
 export WINEPREFIX="$HOME/.vortex-linux/compatdata/pfx"
 
-cd "$WINEPREFIX/drive_c/Program Files/Black Tree Gaming Ltd/Vortex" || exit 1
+if [ -f "$VORTEX_DIR/Vortex.exe" ]; then
+    cd "$VORTEX_DIR" || exit 1
+else
+    cd "$OLD_VORTEX_DIR" || exit 1
+fi
 
 # Check for -d or -i with no "nxm" in the following argument
 if [[ ("$1" == "-d" || "$1" == "-i") && "$2" != *"nxm"* ]]; then

@@ -69,5 +69,17 @@ for FILE in "${FILES_TO_RESTORE[@]}"; do
     restore_file "$SKYRIM_DIR" "$FILE"
 done
 
+# Remove the F3/F4 launch option STR Post-Deploy added (Steam has to be closed to change it)
+if pgrep -x "steam" > /dev/null; then
+    echo "Restarting Steam. Please wait..."
+    steam -shutdown || true
+    while pgrep -x "steam" > /dev/null; do sleep 1; done
+    STEAM_WAS_RUNNING=1
+fi
+python3 ~/.Cyphs/SteamDeckSTR-master/vortex/set-launch-option.py remove "$STEAM_ROOT" "$SKYRIM_APPID" "SteamGameId=302190" || true
+if [ -n "${STEAM_WAS_RUNNING:-}" ]; then
+    nohup steam > /dev/null 2>&1 &
+fi
+
 echo "Undo script completed. This window will close in 5 seconds....."
 sleep 5

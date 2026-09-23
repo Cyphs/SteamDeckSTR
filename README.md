@@ -48,7 +48,7 @@ This will automatically:
 
 1. Install [umu-launcher](https://github.com/Open-Wine-Components/umu-launcher), which runs Vortex with its own Proton (UMU-Proton)
 2. Install GE-Proton10-34 and select it for Skyrim Special Edition in Steam (GE-Proton 11 closes Skyrim Together Reborn right after launch)
-3. Install Vortex 1.15.2
+3. Install Vortex 2.7.0
 4. Add an 'STR Post-Deploy' shortcut to desktop
    * This will set up various things for STR and mods to run correctly when ran through Steam
 5. Map J: to Internal games, and K: to the SD card library if Skyrim is installed there, in Vortex
@@ -58,11 +58,11 @@ This will automatically:
 
 **This may take a few minutes! Steam will automatically restart when done if it completed properly.**
 
-**Important:** Newer Vortex versions (1.16 and up) don't work well on the Steam Deck yet, so Install Vortex turns off automatic updates. Leave Settings > Vortex > Update on **No automatic updates** so it stays on 1.15.2.
+**Note:** Install Vortex turns off Vortex's automatic updates so it stays on the version these scripts were tested with (2.7.0). Newer versions may work too, but haven't been tested yet.
 
 ### Already installed SteamDeckSTR before?
 
-Double click **Update SteamDeckSTR** on the desktop. It upgrades Vortex to 1.15.2 and switches it over to umu-launcher, installs GE-Proton10-34 and selects it for Skyrim Special Edition in Steam, keeping your Vortex mods and settings. Steam will restart. Then update Skyrim Together Reborn and Address Library in Vortex, and run STR Post-Deploy again.
+Double click **Update SteamDeckSTR** on the desktop. It upgrades Vortex to 2.7.0 and switches it over to umu-launcher, installs GE-Proton10-34 and selects it for Skyrim Special Edition in Steam, keeping your Vortex mods and settings. Steam will restart. Then update Skyrim Together Reborn and Address Library in Vortex, and run STR Post-Deploy again.
 
 ## Generate the Game Data
 
@@ -127,6 +127,7 @@ It automates things like:
 * Linking plugins.txt and loadorder.txt from Vortex to the game so your mods are enabled, and making sure the Skyrim Together Reborn plugins are turned on
 * Setting up Skyrim Together Reborn to launch through Steam when running the game normally and setting the Registry paths for STR to automatically locate SkyrimSE.exe
 * Cleaning up files left over from older Skyrim Together Reborn versions, and fixing the launcher again after a Skyrim update
+* Adding `SteamGameId=302190` to the game's Launch Options in Steam so the F3 and F4 keys work (see Currently Known Issues below). Anything else you have in Launch Options is kept, and Undo STR removes it again.
 
 **Make sure to execute this after installing the mods in Vortex.**
 
@@ -149,8 +150,10 @@ It automates things like:
   * ~~Apparently, this happens with the game on the Steam Deck in general, not just with Skyrim Together Reborn. I've found a temporary solution until there's a real fix. Each time you play, open the Creations menu before loading your save and press LB to search. Close it, then load your save. The virtual keyboard won't crash now until next restart. Make sure `SteamDeck=0 %command%` is **removed** from Steam Launch Options or this won't work! Video: https://youtu.be/Km5ZJ2fAzC8~~
   * **Fixed:** the latest Skyrim Special Edition update fixed the virtual keyboard crash on the Steam Deck, so the workaround above is no longer needed.
 
-* The F3 key for the debug UI overlay does not work. This may prevent you from using things like the quest debugger as the Party Leader to advance through bugged quests.
-* The F4 key, for revealing other players with the glow effect, similarly does not work in Linux by default.
+* ~~The F3 key for the debug UI overlay does not work. This may prevent you from using things like the quest debugger as the Party Leader to advance through bugged quests.~~
+* ~~The F4 key, for revealing other players with the glow effect, similarly does not work in Linux by default.~~
+  * **Fixed:** STR Post-Deploy now adds `SteamGameId=302190` to the Launch Options for Skyrim Special Edition in Steam, which makes F3 and F4 work. STR reads F3 and F4 differently than F2, and Proton 10 hides those key presses from every game except a few, so this tells Proton to treat the game like one of them. F4 can also be done with the **Reveal Players** button in the F2 menu while connected.
+  * **Other Linux setups (not using these scripts):** if you launch Skyrim Special Edition through Steam with Proton 10 or GE-Proton 10 (with Vortex, Mod Organizer 2 or anything else), add `SteamGameId=302190 %command%` to its Launch Options in Steam (Properties > General). If you already have launch options, put `SteamGameId=302190` in front of them, for example `SteamGameId=302190 SteamDeck=0 %command%`. If you launch the game outside of Steam (Lutris, Heroic, a script), set the environment variable `SteamGameId=302190` for the game instead (not tested yet).
 
 ## Uninstall
 

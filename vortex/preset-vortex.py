@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Writes a batch file that presets Vortex settings with Vortex's own --del/--set
+# Writes a batch file that presets Vortex settings with Vortex's own --set
 # command line switches, so the game folder, game store, staging folder and
 # hardlink deployment don't have to be picked by hand, and updates stay off.
 # Usage: preset-vortex.py <batch file> [drive letter of the Steam library with Skyrim]
@@ -10,7 +10,7 @@ batch, drive = sys.argv[1], (sys.argv[2] if len(sys.argv) > 2 else "")
 
 settings = [
     ("settings.update.channel", "none"),
-    # Vortex 1.15 leaves new plugins disabled by default, which would leave
+    # Vortex leaves new plugins disabled by default, which would leave
     # SkyrimTogether.esp off after installing Skyrim Together Reborn
     ("settings.plugins.autoEnable", True),
 ]
@@ -44,17 +44,15 @@ def win_arg(text):
     return out + "\\" * (backslashes * 2) + '"'
 
 
-def encode(value):
-    # --set JSON.parses a new value once and stores it as is, while Vortex keeps
-    # strings JSON encoded, so strings are encoded twice
-    return json.dumps(json.dumps(value)) if isinstance(value, str) else json.dumps(value)
-
-
-lines = ["@echo off", 'cd /d "C:\\Program Files\\Black Tree Gaming Ltd\\Vortex"']
+# Fresh installs of Vortex 2.x go to Program Files\Vortex, upgrades of 1.x stay in the old folder
+lines = [
+    "@echo off",
+    'if exist "C:\\Program Files\\Vortex\\Vortex.exe" (cd /d "C:\\Program Files\\Vortex") else (cd /d "C:\\Program Files\\Black Tree Gaming Ltd\\Vortex")',
+]
 for key, value in settings:
-    # Vortex takes one --set per run, and a key that already exists is stored differently
-    lines.append(f"Vortex.exe --del {key}")
-    lines.append(f"Vortex.exe --set {win_arg(f'{key}={encode(value)}')}")
+    # Vortex 2.x stores the value text as given, so it is written as JSON.
+    # One --set per run, and start /wait keeps the batch file running after it.
+    lines.append(f'start "" /wait Vortex.exe --set {win_arg(f"{key}={json.dumps(value)}")}')
 
 with open(batch, "w", newline="") as f:
     f.write("\r\n".join(lines) + "\r\n")

@@ -65,6 +65,9 @@ str_setup "$SKYRIM_DIR" "${SKYRIM_DIR}Data/SkyrimTogetherReborn"
 # Let Vortex use the game's own INI files and saves
 ~/.Cyphs/SteamDeckSTR-master/vortex/link-my-games.sh
 
+# Vortex 2.x needs Steam's library list inside its own prefix
+python3 ~/.Cyphs/SteamDeckSTR-master/vortex/link-steam-libraries.py "$STEAM_ROOT/steamapps/libraryfolders.vdf" "$HOME/.vortex-linux/compatdata/pfx" || true
+
 # Newer Vortex versions leave new plugins disabled, so make sure the Skyrim Together
 # Reborn plugins are enabled (Vortex picks this up from plugins.txt)
 if [ -f "$APPDATA_VORTEX/plugins.txt" ]; then
@@ -122,6 +125,11 @@ fi
 echo "Restarting Steam. Please wait..."
 steam -shutdown
 while pgrep -x "steam" > /dev/null; do sleep 1; done
+
+# F3 (debug UI) and F4 (reveal players) only work under Proton 10 when Wine thinks it runs
+# game 302190, which turns off a Proton hack that hides those key presses from STR
+python3 ~/.Cyphs/SteamDeckSTR-master/vortex/set-launch-option.py add "$STEAM_ROOT" "$SKYRIM_APPID" "SteamGameId=302190" || echo "Could not set the launch option for F3 and F4."
+
 nohup steam > /dev/null 2>&1 &
 
 echo "Success! This window will close in 5 seconds....."

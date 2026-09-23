@@ -32,10 +32,12 @@ else
 
     source ~/.Cyphs/SteamDeckSTR-master/vortex/versions.sh
     export WINEPREFIX="$HOME/.vortex-linux/compatdata/pfx"
-    VORTEX_DIR="$WINEPREFIX/drive_c/Program Files/Black Tree Gaming Ltd/Vortex"
     INSTALLED_VORTEX="$(python3 ~/.Cyphs/SteamDeckSTR-master/vortex/vortex-version.py "$VORTEX_DIR/resources/app.asar")"
+    if [ -z "$INSTALLED_VORTEX" ]; then
+        INSTALLED_VORTEX="$(python3 ~/.Cyphs/SteamDeckSTR-master/vortex/vortex-version.py "$OLD_VORTEX_DIR/resources/app.asar")"
+    fi
 
-    # Older installs have Vortex 1.9 or so, upgrade them in place (mods and settings are kept).
+    # Older installs have Vortex 1.x, upgrade them (mods and settings are kept).
     # A newer Vortex is left alone.
     if [ -n "$INSTALLED_VORTEX" ] && [ "$(printf '%s\n' "$INSTALLED_VORTEX" "$VORTEX_VERSION" | sort -V | head -1)" != "$VORTEX_VERSION" ]; then
         echo "Upgrading Vortex $INSTALLED_VORTEX to $VORTEX_VERSION..."
@@ -46,6 +48,10 @@ else
         "$UMU_DIR/umu-run" "vortex-setup-$VORTEX_VERSION.exe" /S
         rm -f "vortex-setup-$VORTEX_VERSION.exe" dotnet-runtime.exe
     fi
+
+    source ~/.Cyphs/SteamDeckSTR-master/vortex/skyrim-paths.sh
+    # Vortex 2.x needs Steam's library list inside its own prefix
+    python3 ~/.Cyphs/SteamDeckSTR-master/vortex/link-steam-libraries.py "$STEAM_ROOT/steamapps/libraryfolders.vdf" "$HOME/.vortex-linux/compatdata/pfx" || true
 
     # Keep Vortex from updating itself past the tested version, and enable new plugins
     python3 ~/.Cyphs/SteamDeckSTR-master/vortex/preset-vortex.py "$WINEPREFIX/drive_c/sdstr-preset.bat"
