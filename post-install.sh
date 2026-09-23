@@ -29,5 +29,40 @@ else
 
     # Let Vortex use the game's own INI files and saves
     ~/.Cyphs/SteamDeckSTR-master/vortex/link-my-games.sh
+
+    source ~/.Cyphs/SteamDeckSTR-master/vortex/versions.sh
+    export WINEPREFIX="$HOME/.vortex-linux/compatdata/pfx"
+    VORTEX_DIR="$WINEPREFIX/drive_c/Program Files/Black Tree Gaming Ltd/Vortex"
+    INSTALLED_VORTEX="$(python3 ~/.Cyphs/SteamDeckSTR-master/vortex/vortex-version.py "$VORTEX_DIR/resources/app.asar")"
+
+    # Older installs have Vortex 1.9 or so, upgrade them in place (mods and settings are kept).
+    # A newer Vortex is left alone.
+    if [ -n "$INSTALLED_VORTEX" ] && [ "$(printf '%s\n' "$INSTALLED_VORTEX" "$VORTEX_VERSION" | sort -V | head -1)" != "$VORTEX_VERSION" ]; then
+        echo "Upgrading Vortex $INSTALLED_VORTEX to $VORTEX_VERSION..."
+        cd ~/.Cyphs/SteamDeckSTR-master/vortex/
+        wget -O dotnet-runtime.exe "$DOTNET_URL"
+        "$UMU_DIR/umu-run" dotnet-runtime.exe /q
+        wget -O "vortex-setup-$VORTEX_VERSION.exe" "https://github.com/Nexus-Mods/Vortex/releases/download/v$VORTEX_VERSION/vortex-setup-$VORTEX_VERSION.exe"
+        "$UMU_DIR/umu-run" "vortex-setup-$VORTEX_VERSION.exe" /S
+        rm -f "vortex-setup-$VORTEX_VERSION.exe" dotnet-runtime.exe
+    fi
+
+    # Keep Vortex from updating itself past the tested version, and enable new plugins
+    python3 ~/.Cyphs/SteamDeckSTR-master/vortex/preset-vortex.py "$WINEPREFIX/drive_c/sdstr-preset.bat"
+    "$UMU_DIR/umu-run" cmd.exe /c "C:\\sdstr-preset.bat" || echo "Could not update Vortex settings."
+    rm -f "$WINEPREFIX/drive_c/sdstr-preset.bat"
+
+    # Switch Skyrim to the new GE-Proton in Steam (Steam has to be closed to change it)
+    source ~/.Cyphs/SteamDeckSTR-master/vortex/skyrim-paths.sh
+    if pgrep -x steam > /dev/null; then
+        echo "Restarting Steam to select $PROTON_DIR for Skyrim. Please wait..."
+        steam -shutdown || true
+        while pgrep -x steam > /dev/null; do sleep 1; done
+        STEAM_WAS_RUNNING=1
+    fi
+    python3 ~/.Cyphs/SteamDeckSTR-master/vortex/set-compat-tool.py "$STEAM_ROOT/config/config.vdf" "$SKYRIM_APPID" "$PROTON_DIR" || echo "Could not select $PROTON_DIR for Skyrim, pick it in Steam instead."
+    if [ -n "${STEAM_WAS_RUNNING:-}" ]; then
+        nohup steam > /dev/null 2>&1 &
+    fi
 fi
 
