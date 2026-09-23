@@ -121,6 +121,11 @@ if [ -f "$USER_REG" ]; then
     } >> "$USER_REG"
 fi
 
+# GE-Proton starts skse64_loader.exe instead of the launcher when SKSE is installed,
+# which would skip STR (STR loads SKSE itself), so replace that fix with one that knows STR
+mkdir -p ~/.config/protonfixes/localfixes
+cp ~/.Cyphs/SteamDeckSTR-master/vortex/protonfixes/489830.py ~/.config/protonfixes/localfixes/489830.py
+
 # Restart Steam
 echo "Restarting Steam. Please wait..."
 steam -shutdown
