@@ -119,6 +119,7 @@ Make sure you have downloaded the latest **All in One** file of Address Library 
 
 *Other mods are not recommended for stability!
   * If you want to use Skyrim Script Extender (SKSE), just extract it to the game folder root, in the same place where SkyrimSE.exe usually is. Do not use it to start the game. Skyrim Together Reborn automatically detects and loads it. If you see "Skyrim Together is not running!" after adding SKSE, run STR Post-Deploy again, or delete skse64_loader.exe from the game folder. Please be aware that SKSE can cause bugs and possibly increase the chance of crashes. Recommended that you manually download and extract it from [their website here](https://skse.silverlock.org). Make sure you get **Current Anniversary Edition build** for the latest version of the game on Steam, even if you have just Skyrim Special Edition (look at the game version, 1.7.X, not the name!)
+    * If you use a keyboard and mouse with your Steam Deck, [Auto Input Switch](https://www.nexusmods.com/skyrimspecialedition/mods/54309) lets the game switch between the controller and keyboard/mouse on the fly. It needs SKSE, so install that first, and make sure the mod supports your game version.
 
 ### STR Post-Deploy desktop shortcut
 
