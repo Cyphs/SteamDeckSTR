@@ -107,6 +107,7 @@ It automates things like:
 ### How to Play Single Player without Uninstalling Everything
 
 * Run Undo STR
+  * Optional: verify the game files afterwards, just in case. In Steam, right-click Skyrim Special Edition > Properties > Installed Files > **Verify integrity of game files**.
 * Disable Skyrim Together Reborn in Vortex and Deploy in Vortex
 * Play as usual
 * (To activate Skyrim Together Reborn again: re-enable it in Vortex, Deploy if asked, and then run STR Post-Deploy on the Desktop)
@@ -125,7 +126,8 @@ It automates things like:
 
 1. Run Undo-STR on the desktop (This will also restore the Creation Club content to the Data folder, unless you've deleted them manually before this script did it for you.)
 2. Open Vortex and Stop Managing the game to remove the mods
-3. Copy and paste the terminal (Konsole) commands below to get rid of SteamDeckSTR and Vortex
+3. (Optional) Verify the game files, just in case: in Steam, right-click Skyrim Special Edition > Properties > Installed Files > **Verify integrity of game files**
+4. Copy and paste the terminal (Konsole) commands below to get rid of SteamDeckSTR and Vortex
 
 ```bash
 # Remove SteamDeckSTR and Vortex
