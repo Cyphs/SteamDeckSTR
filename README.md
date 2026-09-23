@@ -8,8 +8,6 @@ This is a set of scripts based on [pikdum](https://github.com/pikdum)'s [steam-d
 
 SteamDeckSTR attempts to facilitate the install process specific to playing [Skyrim Together Reborn](https://www.nexusmods.com/skyrimspecialedition/mods/69993) (STR) in SteamOS on the Steam Deck. There are other ways to go about this and this might not be the best method aside from running Windows, but this aims to be a fast and simple way to enjoy Skyrim Together Reborn on your Steam Deck.
 
-Mod Organizer 2 is my mod manager of choice on Windows, but Vortex seems more straightforward for running STR on the Deck and might be more user-friendly.
-
 Supports only the **latest Steam version of Skyrim Special Edition** (1.7.104) and the latest Skyrim Together Reborn (1.8.2) currently.
 
 **Important Note:** Skyrim Together only provides support for Windows on their official social media spaces (Discord, Reddit, etc.) If you have issues using this, do not ask for support there. You can [check or submit an issue here](https://github.com/Cyphs/SteamDeckSTR/issues) or message me on Discord: internalerrorx
@@ -26,8 +24,6 @@ The scripts find Skyrim Special Edition through Steam's own library list, so it 
 
 **An installation video is also available on YouTube:**
 https://www.youtube.com/watch?v=hMkb8LXlerI
-
-Proceed to installing SteamDeckSTR. 
 
 ## SteamDeckSTR:
 
@@ -50,7 +46,6 @@ This will automatically:
 2. Install GE-Proton10-34 and select it for Skyrim Special Edition in Steam (GE-Proton 11 closes Skyrim Together Reborn right after launch)
 3. Install Vortex 2.7.0
 4. Add an 'STR Post-Deploy' shortcut to desktop
-   * This will set up various things for STR and mods to run correctly when ran through Steam
 5. Map J: to Internal games, and K: to the SD card library if Skyrim is installed there, in Vortex
 6. Set up Vortex for Skyrim Special Edition: game folder, Steam as the game store, staging folder on the same drive, Hardlink deployment, new plugins enabled, and no automatic updates
 7. [Delete all included Creation Club content](https://wiki.tiltedphoques.com/tilted-online/guides/troubleshooting/disabling-the-anniversary-editions-creation-club-content) (Survival, Fishing, etc.) to reduce bugs and crashes with STR
@@ -66,7 +61,7 @@ Double click **Update SteamDeckSTR** on the desktop. It upgrades Vortex to 2.7.0
 
 ## Generate the Game Data
 
-* After installing Vortex, **don't run it yet**. In the Steam Library: right-click on Skyrim Special Edition, go to Properties > Compatibility and make sure Force the use of a specific Steam Play compatibility tool is checked with GE-Proton10-34. Install Vortex selects it for you. If it isn't, pick GE-Proton10-34 yourself (it's at the bottom of the list).
+* Install Vortex already selected GE-Proton10-34 for Skyrim Special Edition. If it isn't selected under Properties > Compatibility in Steam, check Force the use of a specific Steam Play compatibility tool and pick GE-Proton10-34 (it's at the bottom of the list).
 
 * Run the game normally through Steam so it can generate all necessary data for it to work correctly and to synchronize your save data from Steam cloud.  
 
@@ -79,42 +74,15 @@ Double click **Update SteamDeckSTR** on the desktop. It upgrades Vortex to 2.7.0
 * Launch Vortex then find/search Skyrim Special Edition in Games to Manage it.
 
 * Install Vortex already set the game folder, staging folder and Hardlink deployment for you, so Skyrim Special Edition switches to managed right away.
-* If Vortex still asks for the game folder, set it manually: use the J: drive for Internal storage games or the K: drive for SD card games. It is highly recommended to use the internal storage.
-  * Vortex then asks you to Choose a Game Store. Select **Steam** and press **Select**.
-* Vortex may pop up some warnings about: Staging location & Deployment Method
-   * When it does:
-      * Walk through their fixes (Note: Skyrim Script Extender (SKSE64) is NOT required nor recommended; you may ignore that one!)
-      * Staging folder needs to be on the same drive as the game
-        * Suggested path works here
-      * Deployment method should be Hardlinks
-   * If it doesn't:
-      * Go to Settings -> Mods
-      * Set the **Base Path** to:
-        * `K:\Vortex Mods\{game}` if your games are on the SD Card
-        * `J:\Vortex Mods\{game}` if your games are on the internal drive
-      * Press **Apply**
-      * **Deployment Method** will now allow you to select `Hardlink deployment`
-      * Press **Apply** again
+* If Vortex still asks for the game folder, use the J: drive for Internal storage games or the K: drive for SD card games, then choose **Steam** as the game store.
 
-### (Optional) Download with Vortex button link handler
+### Download with Vortex button
 
-**It's recommended to just download the mods from Nexus Mods in your web browser manually and then drag and drop into the Mods section of Vortex. In case you mess up or need to reinstall everything, you won't have to download them again.**
-
-If you still want the Download with Vortex button from Nexus Mods to work:
-
-* Might work out of the box, unless you've installed Vortex before
-* If it doesn't work, edit these lines in ~~`~/.local/share/applications/mimeapps.list`~~ `~/.config/mimeapps.list`
-```
-x-scheme-handler/nxm=vortex.desktop
-x-scheme-handler/nxm-protocol=vortex.desktop
-```
-* Run `update-mime-database ~/.local/share/mime/`
-* Might need to reboot
-* If issues persist, make sure your browser is using the default app
+Vortex sets itself up for the Mod Manager Download button on Nexus Mods the first time it starts, so it should work. It's still recommended to download the mods manually in your web browser and drag and drop them into the Mods section of Vortex, so you won't have to download them again if you need to reinstall everything.
 
 ## Install the STR Requirements
 
-After installing [Skyrim Together Reborn](https://www.nexusmods.com/skyrimspecialedition/mods/69993?tab=files), [Address Library](https://www.nexusmods.com/skyrimspecialedition/mods/32444?tab=files), and optionally other mods* in Vortex **then running the STR Post-Deploy script on the Desktop**, you can start the game normally through Game Mode. SkyrimTogether.exe will replace SkyrimSELauncher.exe and SkyrimSELauncher.exe will be renamed to _SkyrimSELauncher.exe in case you wish to Undo this later.
+After installing [Skyrim Together Reborn](https://www.nexusmods.com/skyrimspecialedition/mods/69993?tab=files), [Address Library](https://www.nexusmods.com/skyrimspecialedition/mods/32444?tab=files), and optionally other mods* in Vortex **then running the STR Post-Deploy script on the Desktop**, you can start the game normally through Game Mode. SkyrimTogether.exe will replace SkyrimSELauncher.exe, and the original is kept as _SkyrimSELauncher.exe so Undo STR can put it back.
 Make sure you have downloaded the latest **All in One** file of Address Library (it covers 1.7.104). It's the main file on the download page for Address Library. SKSE is not required for this, despite the name.
 
 *Other mods are not recommended for stability!
@@ -133,8 +101,7 @@ It automates things like:
 
 **Make sure to execute this after installing the mods in Vortex.**
 
-* After running STR Post-Deploy, the game will replace the vanilla launcher (SkyrimSELauncher.exe) with the Skyrim Together Reborn executable.
-* (***Optional***): If you need to open the vanilla Skyrim Special Edition Launcher, install protontricks and launch the underscore-prefixed launcher .exe with it. Alternatively, just temporarily rename them back. You can add `SteamDeck=0 %command%` to the Launch Options under General in the Properties for the game on Steam before running to change the graphics settings, but note that this command causes issues with the virtual keyboard from working, and the settings don't persist when removing it because the game has its own Steam Deck-specific configuration (Steam Deck verified btw...)
+* To use the vanilla Skyrim Special Edition launcher (for example to change graphics settings), run Undo STR, then run STR Post-Deploy again afterwards.
 * If the game doesn't start, try restarting your Steam Deck first.
 
 ### How to Play Single Player without Uninstalling Everything
@@ -148,14 +115,11 @@ It automates things like:
 
 * [SD card installs](https://github.com/Cyphs/SteamDeckSTR/issues/1) are now detected through Steam's library list, but they're less tested than the internal storage. If something doesn't work on an SD card, please report it in that issue.
 
-* ~~Using the Steam virtual keyboard in Gaming Mode then closing it crashes the game. This may prevent you from using the text chat without an external keyboard connected. You might also need an external keyboard or remote desktop program at least once to enter a private server's IP address. It should be saved in the UI the next time it's launched.~~
-  * ~~Apparently, this happens with the game on the Steam Deck in general, not just with Skyrim Together Reborn. I've found a temporary solution until there's a real fix. Each time you play, open the Creations menu before loading your save and press LB to search. Close it, then load your save. The virtual keyboard won't crash now until next restart. Make sure `SteamDeck=0 %command%` is **removed** from Steam Launch Options or this won't work! Video: https://youtu.be/Km5ZJ2fAzC8~~
-  * **Fixed:** the latest Skyrim Special Edition update fixed the virtual keyboard crash on the Steam Deck, so the workaround above is no longer needed.
+* ~~Using the Steam virtual keyboard in Gaming Mode then closing it crashes the game.~~ Fixed by the latest Skyrim Special Edition update, so the Creations menu workaround is no longer needed.
 
-* ~~The F3 key for the debug UI overlay does not work. This may prevent you from using things like the quest debugger as the Party Leader to advance through bugged quests.~~
-* ~~The F4 key, for revealing other players with the glow effect, similarly does not work in Linux by default.~~
-  * **Fixed:** STR Post-Deploy now adds `SteamGameId=302190` to the Launch Options for Skyrim Special Edition in Steam, which makes F3 and F4 work. STR reads F3 and F4 differently than F2, and Proton 10 hides those key presses from every game except a few, so this tells Proton to treat the game like one of them. F4 can also be done with the **Reveal Players** button in the F2 menu while connected.
-  * **Other Linux setups (not using these scripts):** if you launch Skyrim Special Edition through Steam with Proton 10 or GE-Proton 10 (with Vortex, Mod Organizer 2 or anything else), add `SteamGameId=302190 %command%` to its Launch Options in Steam (Properties > General). If you already have launch options, put `SteamGameId=302190` in front of them, for example `SteamGameId=302190 SteamDeck=0 %command%`. If you launch the game outside of Steam (Lutris, Heroic, a script), set the environment variable `SteamGameId=302190` for the game instead (not tested yet).
+* ~~The F3 (debug UI) and F4 (reveal players) keys don't work on Linux.~~ Fixed: STR Post-Deploy adds `SteamGameId=302190` to the game's Launch Options in Steam. Proton 10 hides those key presses from all but a couple of games, and this makes Proton treat Skyrim like one of them. F4 can also be done with the **Reveal Players** button in the F2 menu.
+  * Other Linux setups (Vortex, Mod Organizer 2 or anything else, launched through Steam with Proton 10 or GE-Proton 10): add `SteamGameId=302190 %command%` to the Launch Options for Skyrim Special Edition. If you already have launch options, put it in front, for example `SteamGameId=302190 SteamDeck=0 %command%`.
+  * Heroic, Lutris or anything else using umu-launcher: set the environment variable `GAMEID=umu-302190` instead (umu overwrites SteamGameId).
 
 ## Uninstall
 
@@ -164,9 +128,8 @@ It automates things like:
 3. Copy and paste the terminal (Konsole) commands below to get rid of SteamDeckSTR and Vortex
 
 ```bash
-# Remove SteamDeckSTR and Vortex 
+# Remove SteamDeckSTR and Vortex
 rm -rf ~/.Cyphs/
-# remove vortex
 rm -rf ~/.vortex-linux/
 rm -rf ~/.local/share/applications/vortex.*
 # Manually delete desktop icons
