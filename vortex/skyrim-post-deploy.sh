@@ -137,9 +137,8 @@ say "Restarting Steam, please wait..."
 steam -shutdown || true
 while pgrep -x "steam" > /dev/null; do sleep 1; done
 
-# F3 (debug UI) and F4 (reveal players) only work under Proton 10 when Wine thinks it runs
-# game 302190, which turns off a Proton hack that hides those key presses from STR
-python3 ~/.Cyphs/SteamDeckSTR-master/vortex/set-launch-option.py add "$STEAM_ROOT" "$SKYRIM_APPID" "SteamGameId=302190" || echo "Could not set the launch option for F3 and F4."
+# Older versions added SteamGameId=302190 for F3 and F4, which shows a black screen in Game Mode
+~/.Cyphs/SteamDeckSTR-master/vortex/remove-old-launch-option.sh
 
 nohup steam > /dev/null 2>&1 &
 

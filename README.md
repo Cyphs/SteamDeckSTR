@@ -96,7 +96,6 @@ It automates things like:
 * Copying plugins.txt and loadorder.txt from Vortex to the game so your mods are enabled, and making sure the Skyrim Together Reborn plugins are turned on
 * Setting up Skyrim Together Reborn to launch through Steam when running the game normally and setting the Registry paths for STR to automatically locate SkyrimSE.exe
 * Cleaning up files left over from older Skyrim Together Reborn versions, and fixing the launcher again after a Skyrim update
-* Adding `SteamGameId=302190` to the game's Launch Options in Steam so the F3 and F4 keys work (see Currently Known Issues below). Anything else you have in Launch Options is kept, and Undo STR removes it again.
 * Making sure GE-Proton starts Skyrim Together Reborn, not SKSE's loader, when SKSE is installed
 
 **Make sure to execute this after installing the mods in Vortex, and again whenever you change your mods in Vortex.**
@@ -118,9 +117,10 @@ It automates things like:
 
 * ~~Using the Steam virtual keyboard in Gaming Mode then closing it crashes the game.~~ Fixed by the latest Skyrim Special Edition update, so the Creations menu workaround is no longer needed.
 
-* ~~The F3 (debug UI) and F4 (reveal players) keys don't work on Linux.~~ Fixed: STR Post-Deploy adds `SteamGameId=302190` to the game's Launch Options in Steam. Proton 10 hides those key presses from all but a couple of games, and this makes Proton treat Skyrim like one of them. F4 can also be done with the **Reveal Players** button in the F2 menu.
-  * Other Linux setups (Vortex, Mod Organizer 2 or anything else, launched through Steam with Proton 10 or GE-Proton 10): add `SteamGameId=302190 %command%` to the Launch Options for Skyrim Special Edition. If you already have launch options, put it in front, for example `SteamGameId=302190 SteamDeck=0 %command%`.
-  * Heroic, Lutris or anything else using umu-launcher: set the environment variable `GAMEID=umu-302190` instead (umu overwrites SteamGameId).
+* The F3 (debug UI) and F4 (reveal players) keys don't work on Linux by default. F4 can be done with the **Reveal Players** button in the F2 menu instead. Proton 10 hides those key presses from all but a couple of games, so to get them working when playing in **Desktop mode**, add `SteamGameId=302190 %command%` to the Launch Options for Skyrim Special Edition in Steam. This makes Proton treat Skyrim like one of those games. If you already have launch options, put it in front, for example `SteamGameId=302190 SteamDeck=0 %command%`.
+  * **Remove it again before playing in Game Mode**, or the game shows a black screen there.
+  * Older versions of STR Post-Deploy added it automatically. Update SteamDeckSTR removes it.
+  * The same launch option works for other Linux setups launched through Steam with Proton 10 or GE-Proton 10 (Vortex, Mod Organizer 2 or anything else). Heroic, Lutris or anything else using umu-launcher: set the environment variable `GAMEID=umu-302190` instead (umu overwrites SteamGameId).
 
 ## Uninstall
 

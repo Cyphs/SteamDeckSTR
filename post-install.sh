@@ -86,14 +86,31 @@ else
     # Switch Skyrim to the new GE-Proton in Steam (Steam has to be closed to change it)
     source ~/.Cyphs/SteamDeckSTR-master/vortex/skyrim-paths.sh
     CONFIG_VDF="$STEAM_ROOT/config/config.vdf"
+    NEEDS_PROTON=""
     if [ -n "$SKYRIM_LIBRARY" ] && ! python3 ~/.Cyphs/SteamDeckSTR-master/vortex/set-compat-tool.py --check "$CONFIG_VDF" "$SKYRIM_APPID" "$PROTON_DIR"; then
+        NEEDS_PROTON=1
+    fi
+    # Older versions added SteamGameId=302190 for F3 and F4, which shows a black screen in Game Mode
+    NEEDS_LAUNCH_FIX=""
+    if [ ! -f "$HOME/.Cyphs/.launch-option-removed" ]; then
+        if python3 ~/.Cyphs/SteamDeckSTR-master/vortex/set-launch-option.py check "$STEAM_ROOT" "$SKYRIM_APPID" "SteamGameId=302190"; then
+            NEEDS_LAUNCH_FIX=1
+        else
+            # Not there, so leave it alone from now on in case it's added by hand later
+            touch "$HOME/.Cyphs/.launch-option-removed"
+        fi
+    fi
+    if [ -n "$NEEDS_PROTON" ] || [ -n "$NEEDS_LAUNCH_FIX" ]; then
         if pgrep -x steam > /dev/null; then
             say "Restarting Steam, please wait..."
             steam -shutdown || true
             while pgrep -x steam > /dev/null; do sleep 1; done
             STEAM_WAS_RUNNING=1
         fi
-        python3 ~/.Cyphs/SteamDeckSTR-master/vortex/set-compat-tool.py "$CONFIG_VDF" "$SKYRIM_APPID" "$PROTON_DIR" || echo "Could not select $PROTON_DIR for Skyrim, pick it in Steam instead."
+        if [ -n "$NEEDS_PROTON" ]; then
+            python3 ~/.Cyphs/SteamDeckSTR-master/vortex/set-compat-tool.py "$CONFIG_VDF" "$SKYRIM_APPID" "$PROTON_DIR" || echo "Could not select $PROTON_DIR for Skyrim, pick it in Steam instead."
+        fi
+        ~/.Cyphs/SteamDeckSTR-master/vortex/remove-old-launch-option.sh
         if [ -n "${STEAM_WAS_RUNNING:-}" ]; then
             nohup steam > /dev/null 2>&1 &
         fi

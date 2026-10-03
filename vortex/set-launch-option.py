@@ -3,7 +3,8 @@
 # (Properties > General > Launch Options) for every Steam account on this device,
 # keeping whatever else the user has there. Steam must not be running, or it
 # overwrites localconfig.vdf on exit.
-# Usage: set-launch-option.py add|remove <steam root> <appid> <NAME=value>
+# Usage: set-launch-option.py add|remove|check <steam root> <appid> <NAME=value>
+# check changes nothing, it exits with 0 if any account has the variable and 1 if not.
 import glob
 import os
 import re
@@ -49,7 +50,7 @@ def new_options(current, action, variable):
     return variable + " " + options
 
 
-def update(path, action, appid, variable):
+def update(path, action, appid, variable, write=True):
     with open(path, encoding="utf-8") as f:
         text = f.read()
 
@@ -80,6 +81,8 @@ def update(path, action, appid, variable):
             body = body.rstrip() + f'\n\t\t\t\t\t\t"LaunchOptions"\t\t"{escaped}"\n\t\t\t\t\t'
         text = text[: game[0]] + body + text[game[1] :]
 
+    if not write:
+        return True
     shutil.copy2(path, path + ".sdstr-backup")
     with open(path, "w", encoding="utf-8") as f:
         f.write(text)
@@ -88,7 +91,10 @@ def update(path, action, appid, variable):
 
 def main():
     action, steam_root, appid, variable = sys.argv[1:5]
-    for path in glob.glob(os.path.join(steam_root, "userdata", "*", "config", "localconfig.vdf")):
+    paths = glob.glob(os.path.join(steam_root, "userdata", "*", "config", "localconfig.vdf"))
+    if action == "check":
+        sys.exit(0 if any(update(path, "remove", appid, variable, write=False) for path in paths) else 1)
+    for path in paths:
         if update(path, action, appid, variable):
             print(f"{'Added' if action == 'add' else 'Removed'} {variable} for app {appid} in {path}")
 
