@@ -8,7 +8,7 @@ This is a set of scripts based on [pikdum](https://github.com/pikdum)'s [steam-d
 
 SteamDeckSTR attempts to facilitate the install process specific to playing [Skyrim Together Reborn](https://www.nexusmods.com/skyrimspecialedition/mods/69993) (STR) in SteamOS on the Steam Deck. There are other ways to go about this and this might not be the best method aside from running Windows, but this aims to be a fast and simple way to enjoy Skyrim Together Reborn on your Steam Deck.
 
-Supports only the **latest Steam version of Skyrim Special Edition** (1.7.104) and the latest Skyrim Together Reborn (1.8.2) currently.
+Supports only the **latest Steam version of Skyrim Special Edition** (1.7.104) and the latest Skyrim Together Reborn.
 
 **Important Note:** Skyrim Together only provides support for Windows on their official social media spaces (Discord, Reddit, etc.) If you have issues using this, do not ask for support there. You can [check or submit an issue here](https://github.com/Cyphs/SteamDeckSTR/issues) or message me on Discord: internalerrorx. The desktop shortcuts save their full output in `~/.Cyphs/logs/`, so attach the log from there when reporting a problem.
 

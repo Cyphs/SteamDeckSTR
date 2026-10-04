@@ -125,8 +125,8 @@ else
     fi
     say ""
     say "Next steps:"
-    say "1. In Vortex, make sure you have the latest Skyrim Together Reborn ($STR_VERSION) and"
-    say "   Address Library ($ADDRESS_LIBRARY_VERSION). If not, download them from Nexus Mods,"
+    say "1. In Vortex, make sure you have the latest Skyrim Together Reborn and"
+    say "   Address Library (All in One). If not, download them from Nexus Mods,"
     say "   install them in Vortex and choose Replace when Vortex asks about the old version."
     say "2. Run STR Post-Deploy on the desktop (again after any change to your mods in Vortex)."
     say ""
